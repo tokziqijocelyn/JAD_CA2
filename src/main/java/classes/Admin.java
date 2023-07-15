@@ -11,6 +11,7 @@ public class Admin {
 	
 	public Admin (boolean verified) {
 		this.authenticated = verified;
+		
 	}
 	
 
