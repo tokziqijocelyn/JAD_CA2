@@ -1,3 +1,4 @@
+
 package classes;
 
 import java.sql.*;
@@ -6,7 +7,7 @@ public class Database {
 	public static Connection connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			String connURL = "jdbc:mysql://localhost:3306/jad_ca1?user=root&password=root&serverTimezone=UTC";
+			String connURL = "jdbc:mysql://localhost:3306/jad_ca1?user=JAD&password=JAD&serverTimezone=UTC";
 			Connection conn = DriverManager.getConnection(connURL);
 			return conn;
 		} catch (Exception e) {
