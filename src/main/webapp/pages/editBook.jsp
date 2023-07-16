@@ -25,7 +25,6 @@ body {
 	%>
 	<%
 	
-	String nigger;
 	String code = request.getParameter("code");
 	String message = "";
 	if (code != null) {
