@@ -7,9 +7,7 @@
 <title>BookStore</title>
 </head>
 <body>
-	<%@ page import="classes.Database"%>
 	<%@ page import="classes.Cart"%>
-	<%@ page import="java.sql.*"%>
 	<%@ page import="java.util.ArrayList"%>
 	<%@ include file="../custNav.jsp"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
