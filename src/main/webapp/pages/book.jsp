@@ -3,7 +3,6 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>BokStore</title>
-<%@page import='classes.Database'%>
 <%@page import='classes.Book'%>
 <%@page import='models.BookDAO'%>
 <%@page import='classes.Review'%>
@@ -39,8 +38,6 @@
 		}
 
 		Book book = new BookDAO().getBookById(book_id);
-
-		Connection conn = Database.connect();
 		%>
 		<%
 		if (!message.equals("")) {

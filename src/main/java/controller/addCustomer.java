@@ -107,8 +107,14 @@ public class addCustomer extends HttpServlet {
         
         code = new CustomerDAO().addCustomer(imagePath, username, email, pwd, block, street, unit_no, postal_code, null);
         
-        String url = "pages/custSignUp.jsp?code="+code;
+        String url;
         
+        if (code.equals("duplicate")) {
+        	url = "pages/custSignUp.jsp?code="+code;
+        } else {
+        	url = "pages/custLogin.jsp?code="+code;
+        }
+                
 		request.getRequestDispatcher(url).forward(request, response);
 		
 	}

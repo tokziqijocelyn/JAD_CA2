@@ -59,7 +59,7 @@ public class addBook extends HttpServlet {
 	            System.out.println(output);
 	        }
 	     	
-		String absolutePath = output + File.separator + "JAD_CA1" + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "images";
+		String absolutePath = output + File.separator + "JAD_CA2" + File.separator + "src" + File.separator + "main" + File.separator + "webapp" + File.separator + "images";
 		System.out.println(absolutePath);
        File fileSaveDir = new File(absolutePath);
        String imagePath = "";
@@ -98,7 +98,7 @@ public class addBook extends HttpServlet {
             imagePath = "/images/" + newFileName;
             
        } else {
-          imagePath = "../images/default.jpg";
+          imagePath = "/images/default.jpg";
        }
 		String title = request.getParameter("title");
 		String ISBN = request.getParameter("ISBN");
@@ -108,9 +108,7 @@ public class addBook extends HttpServlet {
 		Integer category = Integer.parseInt(request.getParameter("category"));
 		Integer author = Integer.parseInt(request.getParameter("author"));
 		Integer publisher_id = Integer.parseInt(request.getParameter("publisher"));
-       
-		String query = "INSERT INTO books (title, author_id, price, quantity, ISBN, book_category_id, description, image, publisher_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-		
+       		
 		code = new BookDAO().addBook(imagePath, title, ISBN, price, quantity, description, category, author, publisher_id);
 		
 		String url = "pages/dashboard.jsp?code="+code;

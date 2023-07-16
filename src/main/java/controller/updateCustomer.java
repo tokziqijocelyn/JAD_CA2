@@ -117,7 +117,7 @@ public class updateCustomer extends HttpServlet {
 		if (cust == 1) {
 			url = "pages/custProfile.jsp" + url;
 		} else {
-			url = "loadCustomer";
+			url = "loadCustomer" + url;
 		}
 
 		
