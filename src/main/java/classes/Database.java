@@ -1,7 +1,7 @@
 package classes;
 
 import java.sql.*;
-//test
+
 public class Database {
 	public static Connection connect() {
 		try {
