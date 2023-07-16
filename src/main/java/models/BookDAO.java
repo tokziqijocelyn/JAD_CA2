@@ -285,10 +285,11 @@ public class BookDAO {
 
 	public Book getBookById(int bookId) {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id WHERE books.book_id = ? GROUP BY books.book_id";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, (books.quantity - COALESCE((SELECT SUM(cart.quantity) FROM cart WHERE cart.book_id = ?), 0)) AS quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id WHERE books.book_id = ? GROUP BY books.book_id";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setInt(1, bookId);
+			myStmt.setInt(2, bookId);
 			ResultSet rs = myStmt.executeQuery();
 			while (rs.next()) {
 				Integer book_id = rs.getInt("book_id");

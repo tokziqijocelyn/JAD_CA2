@@ -11,21 +11,18 @@
 	<%@page import='java.sql.*'%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<%@ page import="classes.Customer"%>
-   <%@include file="../custNav.jsp"%>
-	
+	<%@include file="../custNav.jsp"%>
+
 	<%
 	String code = request.getParameter("code");
 	String message = "";
 	if (code != null) {
-		if (code.equals("success")) {
-			message = "Customer Created Successfully";
-		} else if (code.equals("duplicate")){
+		if (code.equals("duplicate")) {
 			message = "Customer already exist!";
-		} else if (code.equals("error")){
+		} else if (code.equals("error")) {
 			message = "Something went wrong";
 		}
 	}
-
 	%>
 	<%
 	if (!message.equals("")) {
@@ -38,7 +35,6 @@
 	</div>
 	<%
 	}
-
 	%>
 	<div class="container mt-4">
 		<div class="row">
@@ -47,61 +43,58 @@
 					<h2>
 						<u><b>CUSTOMER DETAILS</b></u>
 					</h2>
-					<form action="/JAD_CA1/addCustomer" method="POST" enctype="multipart/form-data">
+					<form action="/JAD_CA2/addCustomer" method="POST"
+						enctype="multipart/form-data">
 						<p>
 							<b><u>Username: </u></b> <input type="text" class="form-control"
-								id="username" value="" required
-								name="username" autocomplete="off" />
-						</p>
-						<p>
-							<b><u>Email:</u></b> <input type="email" class="form-control"
-								id="email" value="" required
-								name="email" autocomplete="off"/>
-						</p>
-						<p>
-							<b><u>Password:</u></b> <input type="text" class="form-control"
-								id="password" value="" required
-								name="password" autocomplete="off"  />
-						</p>
-						<p>
-							<b><u>Block:</u></b> <input type="text" class="form-control"
-								id="block" value="" required
-								name="block" autocomplete="off" />
-						</p>
-						<p>
-							<b><u>Postal Code:</u></b> <input type="number"
-								class="form-control" id="postal_code"
-								value="" required
-								name="postal_code" autocomplete="off"/>
-						</p>
-						<p>
-							<b><u>Unit Number:</u></b> <input type="text"
-								class="form-control" id="unit_no"
-								value="" required name="unit_no"
+								id="username" value="" required name="username"
 								autocomplete="off" />
 						</p>
 						<p>
+							<b><u>Email:</u></b> <input type="email" class="form-control"
+								id="email" value="" required name="email" autocomplete="off" />
+						</p>
+						<p>
+							<b><u>Password:</u></b> <input type="text" class="form-control"
+								id="password" value="" required name="password"
+								autocomplete="off" />
+						</p>
+						<p>
+							<b><u>Block:</u></b> <input type="text" class="form-control"
+								id="block" value="" required name="block" autocomplete="off" />
+						</p>
+						<p>
+							<b><u>Postal Code:</u></b> <input type="number"
+								class="form-control" id="postal_code" value="" required
+								name="postal_code" autocomplete="off" />
+						</p>
+						<p>
+							<b><u>Unit Number:</u></b> <input type="text"
+								class="form-control" id="unit_no" value="" required
+								name="unit_no" autocomplete="off" />
+						</p>
+						<p>
 							<b><u>Street:</u></b> <input type="text" class="form-control"
-								id="street" value="" required
-								name="street" autocomplete="off" />
+								id="street" value="" required name="street" autocomplete="off" />
 						</p>
 						<input type="file" name="image" id="image" accept="image/*"
-						class="custom-file-input">
-						<button type="submit" class="btn btn-success">Create account</button>
-						
+							class="custom-file-input">
+						<button type="submit" class="btn btn-success">Create
+							account</button>
+
 					</form>
 				</div>
 			</div>
 
 			<div class="col-md-7">
 				<div class="col-6">
-					<img src="../images/customer.jpg" alt="Customer Image"
-						class="rounded img-fluid" id="preview">
+					<img src="<%=request.getContextPath()%>/images/customer.jpg"
+						alt="Customer Image" class="rounded img-fluid" id="preview">
 				</div>
 
 			</div>
 		</div>
-		
+
 	</div>
 </body>
 

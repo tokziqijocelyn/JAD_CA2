@@ -22,6 +22,7 @@
 
 	if (!customer.isAuthenticated()) {
 		response.sendRedirect("/JAD_CA2/pages/custLogin.jsp");
+		return;
 	}
 	
 	try{

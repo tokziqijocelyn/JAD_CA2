@@ -40,6 +40,7 @@
 
 	if (!customer.isAuthenticated()) {
 	response.sendRedirect("/JAD_CA2/pages/custLogin.jsp");
+	return;
 	}
 
 	int cust_id = customer.getCust_id();
@@ -61,7 +62,7 @@
 								name="username" autocomplete="off" disabled />
 						</p>
 						<p>
-							<b><u>Email:</u></b> <input type="text" class="form-control"
+							<b><u>Email:</u></b> <input type="email" class="form-control"
 								id="email" value="<%=customer.getEmail()%>" required
 								name="email" autocomplete="off" disabled />
 						</p>

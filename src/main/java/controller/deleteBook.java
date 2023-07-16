@@ -7,19 +7,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import models.CustomerDAO;
-
 /**
- * Servlet implementation class deleteCustomer
+ * Servlet implementation class deleteBook
  */
-@WebServlet("/deleteCustomer")
-public class deleteCustomer extends HttpServlet {
+@WebServlet("/deleteBook")
+public class deleteBook extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public deleteCustomer() {
+    public deleteBook() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -29,28 +27,7 @@ public class deleteCustomer extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		int cust_id = Integer.parseInt(request.getParameter("cust_id"));
-		int cust = Integer.parseInt(request.getParameter("cust"));
-		
-		int affectedRows = 0;
-		
-		affectedRows = new CustomerDAO().deleteCustomerByID(cust_id);
-		
-		String url = "/pages/custLogin.jsp";
-		
-		if (affectedRows == 1 ) {
-			url = url + "?code=success";
-		} else {
-			url = url + "?code=err";
-		}
-		
-		if (cust != 1) {
-			url = "loadCustomers?code=success";
-		}
-		
-		request.getRequestDispatcher(url).forward(request, response);	
-		
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**

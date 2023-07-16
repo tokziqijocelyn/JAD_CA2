@@ -7,19 +7,37 @@
 <title>BokStore</title>
 </head>
 <body>
-		<%@page import='java.util.*'%>
-		<%@page import='classes.*'%>
+	<%@page import='java.util.*'%>
+	<%@page import='classes.*'%>
 	<%@include file="../adminNav.jsp"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<%
+	ArrayList<Customer> customers = (ArrayList<Customer>) request.getAttribute("customers");
 
-		ArrayList<Customer> customers = (ArrayList<Customer>) request.getAttribute("customers");
-	
-		if (customers == null) {
-			response.sendRedirect(request.getContextPath() + "/loadCustomers");
-			return;
+	if (customers == null) {
+		response.sendRedirect(request.getContextPath() + "/loadCustomers");
+		return;
+	}
+	String code = request.getParameter("code");
+	String message = "";
+
+	if (code != null) {
+		if (code.equals("success")) {
+			message = "Customer deleted successfully";
 		}
-	
+	}
+	%>
+	<%
+	if (!message.equals("")) {
+	%>
+	<div class="alert alert-warning alert-dismissible fade show"
+		role="alert">
+		<%=message%>
+		<button type="button" class="btn-close" data-bs-dismiss="alert"
+			aria-label="Close"></button>
+	</div>
+	<%
+	}
 	%>
 	<div class="container mt-5">
 		<h2>
@@ -43,20 +61,20 @@
 						<div class="candidate-list candidate-grid">
 							<div class="candidate-list-image">
 								<img class="img-fluid"
-									src=<%=request.getContextPath() + image_url %> alt="">
+									src=<%=request.getContextPath() + image_url%> alt="">
 							</div>
 							<div class="candidate-list-details">
 								<div class="candidate-list-info">
 									<div class="candidate-list-title">
-										<h5><%=username %></h5>
+										<h5><%=username%></h5>
 									</div>
 									<div class="candidate-list-option">
 										<ul class="list-unstyled">
-											<li><i class="bi bi-calendar pr-1 me-1"></i></i><fmt:parseDate
-											var="parsedDate" value="<%=registered_date%>"
-											pattern="yyyy-MM-dd HH:mm:ss" /> <fmt:formatDate
-											value="${parsedDate}" pattern="dd MMMM yyyy" /></li>
-											<li><i class="bi bi-geo-alt-fill me-1"></i></i><%=block + " - " + street + " - " + postal_code + " - #" +  unit_no%></li>
+											<li><i class="bi bi-calendar pr-1 me-1"></i></i> <fmt:parseDate
+													var="parsedDate" value="<%=registered_date%>"
+													pattern="yyyy-MM-dd HH:mm:ss" /> <fmt:formatDate
+													value="${parsedDate}" pattern="dd MMMM yyyy" /></li>
+											<li><i class="bi bi-geo-alt-fill me-1"></i></i><%=block + " - " + street + " - " + postal_code + " - #" + unit_no%></li>
 										</ul>
 									</div>
 								</div>
@@ -65,7 +83,8 @@
 									<div class="d-flex justify-content-center align-items-center">
 										<span class="me-2">View Profile</span>
 										<form action="/JAD_CA2/loadCustomer">
-											<input type="hidden" name="customer_id" value="<%=customer_id%>" />
+											<input type="hidden" name="customer_id"
+												value="<%=customer_id%>" />
 											<button
 												class="candidate-list-favourite order-2 d-flex align-items-center justify-content-center">
 												<i class="bi bi-arrow-right"></i>
