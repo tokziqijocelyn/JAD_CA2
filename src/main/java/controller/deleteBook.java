@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.BookDAO;
+
 /**
  * Servlet implementation class deleteBook
  */
@@ -27,8 +29,15 @@ public class deleteBook extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+		
+		String code = "error";
+		int book_id = Integer.parseInt(request.getParameter("book_id"));
+		
+		code = new BookDAO().deleteBookById(book_id);
+		
+		response.sendRedirect("loadDashboard?code="+code);
+		
+			}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

@@ -516,4 +516,33 @@ public class BookDAO {
 		
 	}
 	
+	public String deleteBookById(int book_id) {
+		String code = "error";
+		Connection conn = Database.connect();
+		String query = "DELETE FROM books WHERE book_id= ?";
+		
+		try {
+			
+			PreparedStatement myStmt = conn.prepareStatement(query);
+			myStmt.setInt(1, book_id);
+			myStmt.executeUpdate();
+			code = "deleteBook";
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return code;
+		
+	}
+	
 }
