@@ -64,7 +64,7 @@
 											</div>
 											<div class="col-md-4">
 												<h6 class="text-muted"><%=cartItem.getCategory()%></h6>
-												<h6 class="text-black mb-0"><%=cartItem.getCategory()%></h6>
+												<h6 class="text-black mb-0"><%=cartItem.getTitle()%></h6>
 											</div>
 											<div class="col-md-3 d-flex justify-content-end align-items-center">
 												<div class="input-group">
@@ -73,14 +73,19 @@
 											</div>
 											<div class="col-md-3 d-flex justify-content-end align-items-center">
 												<h6 class="mb-0">
-													$ <span ><%=total_price%></span>
+													$ <span ><%=cartItem.getTotalAmt()%></span>
 												</h6>
 											</div>
 										</div>
 										<hr class="my-4">
+										<%
+												}
+									%>
+								
 										
 										<a class="btn btn-primary" href="http://localhost:8080/JAD_CA2/pages/cart.jsp">Back to Cart</a>
 									</div>
+		
 
 								</div>
 								<div class="col-lg-7 bg-grey">
@@ -115,7 +120,7 @@
 											</h5>
 										</div>
 										<%
-										}
+										
 												session.setAttribute("checkout", cartItems);	
 											}
 										
