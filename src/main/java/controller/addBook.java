@@ -111,7 +111,7 @@ public class addBook extends HttpServlet {
        		
 		code = new BookDAO().addBook(imagePath, title, ISBN, price, quantity, description, category, author, publisher_id);
 		
-		String url = "loadDashboard11?code="+code;
+		String url = "loadDashboard?code="+code;
 		//response.sendRedirect(url);
 		request.getRequestDispatcher(url).forward(request, response);
 
