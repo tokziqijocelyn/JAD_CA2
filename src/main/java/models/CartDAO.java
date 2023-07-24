@@ -73,17 +73,34 @@ public class CartDAO {
 		boolean success = false;
 		
 		Connection conn = Database.connect();
-        String cartQuery = "INSERT INTO cart (book_id, cust_id, quantity) VALUES (?,?,?);";
+		
+		String getCartQuery = "SELECT book_id FROM cart WHERE cust_id = ? AND book_id = ?";
+        String cartQuery = "INSERT INTO cart ( quantity, book_id, cust_id) VALUES (?,?,?);";
 
 		  try {
+			  
+			  	PreparedStatement getCartStmt = conn.prepareStatement(getCartQuery);
+			  	getCartStmt.setInt(1, cust_id);
+			  	getCartStmt.setInt(2, book_id);
+			  	ResultSet rs = getCartStmt.executeQuery();
+			  	if (rs.next()) {
+		
+			  		cartQuery = "UPDATE cart SET quantity = (quantity + ?) WHERE book_id = ? AND cust_id = ?";
+			  		System.out.println(cartQuery);
+			  	} 
+			  	
 		        PreparedStatement cartStmt = conn.prepareStatement(cartQuery);
-		        cartStmt.setInt(1, book_id);
-		        cartStmt.setInt(2, cust_id);
-		        cartStmt.setInt(3, qty);
-		        cartStmt.executeUpdate();
-
-		        success = true;
+		        cartStmt.setInt(1, qty);
+		        cartStmt.setInt(2, book_id);
+		        cartStmt.setInt(3, cust_id);
+		        int rows = cartStmt.executeUpdate();
+		        
+		        if (rows != 0) {
+			        success = true;
+		        }
+	
 		    }	catch (SQLException e) {
+		    	System.out.println("SQL statemetn");
 				e.printStackTrace();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
