@@ -1,6 +1,7 @@
 <%@page import='classes.Customer'%>
 <%@page import='models.CustomerDAO'%>
 <%@include file="./styles.jsp"%>
+
 <%
 	Customer customer = new CustomerDAO().initCustomerBySession(session);
 %>

@@ -5,6 +5,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>BokStore</title>
+
 </head>
 <body>
 	<%@page import='classes.*'%>
@@ -12,6 +13,7 @@
 	<%@page import='java.util.TimerTask'%>
 	<%@page import='java.util.ArrayList'%>
 	<%@include file="../custNav.jsp"%>
+	
 	<%
 	String categoryId = request.getParameter("category");
 	String publisherId = request.getParameter("publisher");
@@ -58,6 +60,7 @@
 
 	<div class="container-fluid mt-5">
 		<div class="row">
+
 			<div id="filter" class="col-3">
 				<div class="btn-group" role="group" aria-label="Sort Buttons">
 					<form method="POST" action="/JAD_CA2/loadBooks">
@@ -116,6 +119,7 @@
 				%>
 				<div class="card mb-3">
 					<div class="row no-gutters">
+					
 						<div class="col-md-2">
 							<img src="<%=request.getContextPath() + image%>" alt="Default Image"
 								class="img-fluid rounded"
