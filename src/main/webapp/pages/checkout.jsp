@@ -20,6 +20,7 @@
 <body>
 
 	<%
+	String x = "";
 	int customer_id = customer.getCust_id();
 
 	if (!customer.isAuthenticated()) {
