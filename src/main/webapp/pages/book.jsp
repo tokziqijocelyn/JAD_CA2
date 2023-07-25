@@ -58,28 +58,21 @@
 		%>
 
 		<div class="container m-5">
-			<div class="row">
+			<div class="row d-flex justify-content-center align-items-center">
 				<div class="col-md-5">
-					<div class="d-flex justify-content-center align-items-center"
+					<div class="d-flex mt-3"
 						style="height: 400px;">
-						<img src="<%=request.getContextPath()+ book.getImage()%>" alt="book image" class="img-fluid"
+						<img src=<%=request.getContextPath()+ book.getImage()%> alt="book image" class="img-fluid"
 							style="object-fit: cover; max-width: 100%; max-height: 100%;">
 					</div>
+					<p class="d-flex justify-content-center align-items-center">10 Reviews</p>
 				</div>
 
-				<div class="col-md-7 mt-5 ml-1">
-					<h3>
-						Title:
-						<%=book.getTitle()%></h3>
-					<h5>
-						Author:
-						<%=book.getAuthor_name()%></h5>
-					<h5>
-						Publisher:
-						<%=book.getPublisher_name()%></h5>
-					<span class="badge bg-primary mt-2 mb-2">CATEGORY: <%=book.getCategory_name()%></span>
-					<span class="badge bg-success">$<%=price%></span>
-					<h5 class="card-subtitle mt-2 mb-2 text-muted">
+				<div class="col-md-7">
+					<div class="card p-5 border-primary mb-3 rounded-2" style="max-width: 100rem;">
+					  <div class="card-body">
+					    <h1 class="card-title m-2">Title: <%=book.getTitle()%></h1>
+					    <h5 class="card-subtitle mt-2 mb-2 text-muted">
 						<%
 						if (rating != 0) {
 							for (int i = 0; i < rating; i++) {
@@ -101,15 +94,27 @@
 						}
 						%>
 					</h5>
+						<span class="badge bg-secondary">$<%=price%></span>
+					    <span class="badge bg-primary"> <%=book.getCategory_name()%></span>
+						
+					    <p class="card-text">
+						    <strong> Author: </strong> <%=book.getAuthor_name()%>
+						    <br>
+						    <strong> Publisher: </strong> <%=book.getPublisher_name()%> 
+					    </p>
+					
+						<h5 mt-5><u>Book Description:</u></h5>
+						<p><%=book.getDescription()%>
+						</p>
+					</div>
 
-					<h5 mt-5>Description:</h5>
-					<p><%=book.getDescription()%>
-					</p>
 
 					<%
 					if (!customer.isAuthenticated()) {
 					%>
-					<h1>Login To Add To Cart</h1>
+					<form action="/JAD_CA2/pages/custLogin.jsp">
+						<input type="submit" class="btn btn-danger ml-2" value="Login To Add To Cart">
+					</form>
 					<%
 					} else {
 					%>
@@ -137,7 +142,7 @@
 						</select>
 
 
-						<button type="submit" class="btn btn-primary">Add to cart</button>
+						<button type="submit" class="btn btn-primary">Add to cart <i class="bi bi-basket2-fill"></i></button>
 						<p class="text-secondary">
 							Stocks left:
 							<%=quantity%></p>
@@ -157,9 +162,12 @@
 					<%
 					}
 					%>
-
+  </div>
 				</div>
 			</div>
+			
+			<hr class="m-5">
+			
 			<h1>Reviews</h1>
 			<%
 			// Retrieve reviews for the book
@@ -174,7 +182,7 @@
 				Review review = reviewList.get(i);
 				
 			%>
-			<div class="card mt-3">
+			<div class="card text-white bg-primary mt-3">
 				<div class="card-body">
 					<h6 class="card-title"><%=review.getUsername()%></h6>
 					<div class="rating">
