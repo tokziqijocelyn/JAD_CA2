@@ -18,10 +18,33 @@ public class Book {
 	private String category_name;
 	private String date_time;
 	private int total_sold;
-	
+	private Float discount_price;
+
 	public Book(Integer book_id, String title, String description, String iSBN, Integer rating, Float price,
 			Integer category_id, String image, Integer author_id, String creation_date, Integer quantity,
 			Integer publisher_id, String author_name, String publisher_name, String category_name) {
+		super();
+		this.book_id = book_id;
+		this.title = title;
+		this.description = description;
+		this.ISBN = iSBN;
+		this.rating = rating;
+		this.price = price;
+		this.category_id = category_id;
+		this.image = image;
+		this.author_id = author_id;
+		this.creation_date = creation_date;
+		this.quantity = quantity;
+		this.publisher_id = publisher_id;
+		this.author_name = author_name;
+		this.publisher_name = publisher_name;
+		this.category_name = category_name;
+	}
+
+	public Book(Integer book_id, String title, String description, String iSBN, Integer rating, Float price,
+			Integer category_id, String image, Integer author_id, String creation_date, Integer quantity,
+			Integer publisher_id, String author_name, String publisher_name, String category_name,
+			Float discount_price) {
 		super();
 		this.book_id = book_id;
 		this.title = title;
@@ -38,15 +61,22 @@ public class Book {
 		this.author_name = author_name;
 		this.publisher_name = publisher_name;
 		this.category_name = category_name;
+		this.discount_price = discount_price;
 	}
-	
+
+	public Float getDiscount_price() {
+		return discount_price;
+	}
+
+	public void setDiscount_price(Float discount_price) {
+		this.discount_price = discount_price;
+	}
 
 	public Book(String date_time, int total_sold) {
 		super();
 		this.date_time = date_time;
 		this.total_sold = total_sold;
 	}
-
 
 	public Book(Integer book_id, String title, int total_sold) {
 		super();
@@ -55,30 +85,21 @@ public class Book {
 		this.total_sold = total_sold;
 	}
 
-
 	public String getDate_time() {
 		return date_time;
 	}
-
-
 
 	public int getTotal_sold() {
 		return total_sold;
 	}
 
-
-
 	public void setDate_time(String date_time) {
 		this.date_time = date_time;
 	}
 
-
-
 	public void setTotal_sold(int total_sold) {
 		this.total_sold = total_sold;
 	}
-
-
 
 	public String getCategory_name() {
 		return category_name;
@@ -199,5 +220,5 @@ public class Book {
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
-	
+
 }

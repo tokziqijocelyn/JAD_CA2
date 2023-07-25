@@ -30,16 +30,34 @@
 	}
 	%>
 
-	<select class="form-select mb-2" id="filter">
-		<option <%=filter.equals("today") ? "selected" : ""%> value="today">Today</option>
-		<option <%=filter.equals("week") ? "selected" : ""%> value="week">Week</option>
-		<option <%=filter.equals("month") ? "selected" : ""%> value="month">Month</option>
-	</select>
+	<div class="container my-5">
+		<div class="row mx-2">
 
-	<div class="chart-container"
-		style="position: relative; height: 40vh; width: 80vw">
-		<canvas id="myChart"></canvas>
+			<div class="col-md-4">
+				<h2 class="mb-4">
+					<u><b>Best Selling Books</b></u>
+				</h2>
+				<select class="form-select mb-2" id="filter">
+					<option <%=filter.equals("today") ? "selected" : ""%> value="today">Today</option>
+					<option <%=filter.equals("week") ? "selected" : ""%> value="week">Week</option>
+					<option <%=filter.equals("month") ? "selected" : ""%> value="month">Month</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 mx-2">
+
+				<div class="chart-container"
+					style="position: relative; height: 40vh; width: 80vw">
+					<canvas id="myChart"></canvas>
+				</div>
+			</div>
+		</div>
 	</div>
+
+
+
+
 
 	<script>	
 		const ctx = document.getElementById('myChart');

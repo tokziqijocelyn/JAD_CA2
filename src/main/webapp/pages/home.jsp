@@ -7,13 +7,24 @@
 <title>BokStore</title>
 
 </head>
+
+<style>
+/* Styles for the "cancelled" price (strikethrough) */
+.discounted-price {
+	text-decoration: line-through;
+	color: red; /* You can adjust the color as needed */
+	font-size: 18px; /* Adjust the font size as per your preference */
+}
+
+</style>
+
 <body>
 	<%@page import='classes.*'%>
 	<%@page import='java.util.Timer'%>
 	<%@page import='java.util.TimerTask'%>
 	<%@page import='java.util.ArrayList'%>
 	<%@include file="../custNav.jsp"%>
-	
+
 	<%
 	String categoryId = request.getParameter("category");
 	String publisherId = request.getParameter("publisher");
@@ -114,12 +125,13 @@
 					String image = book.getImage();
 					String author = book.getAuthor_name();
 					String publisher_name = book.getPublisher_name();
+					Float discount_price = book.getDiscount_price();
 				%>
 				<div class="card border-primary mb-3 rounded-3 p-2">
 					<div class="row no-gutters">
 						<div class="col-md-3">
-							<img src="<%=request.getContextPath() + image%>" alt="Default Image"
-								class="img-fluid rounded-2 m-4"
+							<img src="<%=request.getContextPath() + image%>"
+								alt="Default Image" class="img-fluid rounded-2 m-4"
 								style="object-fit: cover; width: 80%; height: 80%;">
 						</div>
 						<div class="col-md-5">
@@ -149,28 +161,38 @@
 									%>
 								</h6>
 								<div>
-								<h6 class="card-subtitle badge rounded-pill bg-primary mb-2 text-muted">
-									$<%=price%></h6>
-								
-								<p class="card-text font-weight-bold badge rounded-pill bg-secondary text-uppercase">
-									<%=category_name%></p>
+									<%
+									if (discount_price == null) {
+									%>
+									<span class="badge bg-secondary">$<%=price%></span>
+									<%
+									} else {
+									%>
+									<span class="badge bg-secondary discounted-price">$<%=price%></span>
+									<br /> <span class="badge bg-success">Discounted
+										Price: $<%=discount_price%></span>
+									<%
+									}
+									%>
+									<span class="badge bg-primary"><%=category_name%></span>
 								</div>
 
 								<div class="card-text">
 									<p>
 										<small class="text-muted">Written By: <span
-										class="font-weight-bold"><%=author%></span></small>
-										<br>
-										<small class="text-muted">Published By: <span
-										class="font-weight-bold"><%=publisher_name%></span></small>
+											class="font-weight-bold"><%=author%></span></small> <br> <small
+											class="text-muted">Published By: <span
+											class="font-weight-bold"><%=publisher_name%></span></small>
 									</p>
-									
+
 								</div>
-									<form action="pages/book.jsp">
-										<input type="hidden" name="book_id" value="<%=book_id%>" />
-										<button type="submit" class="btn btn-primary">View Book <i class="bi bi-arrow-right-circle-fill"></i></button>
-									</form>
-								
+								<form action="pages/book.jsp">
+									<input type="hidden" name="book_id" value="<%=book_id%>" />
+									<button type="submit" class="btn btn-primary">
+										View Book <i class="bi bi-arrow-right-circle-fill"></i>
+									</button>
+								</form>
+
 							</div>
 						</div>
 					</div>

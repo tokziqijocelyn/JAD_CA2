@@ -50,7 +50,7 @@
 			<div class="col-md-5">
 				<div class="project-info-box mt-0">
 					<h2>
-						<u><b>CUSTOMER DETAILS <%= cust_id %> </b></u>
+						<u><b>CUSTOMER DETAILS  </b></u>
 					</h2>
 					<form action="/JAD_CA2/updateCustomer" method="POST"
 						enctype="multipart/form-data">

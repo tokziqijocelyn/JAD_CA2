@@ -24,7 +24,7 @@ public class BookDAO {
 
 	public ArrayList<Book> getBooksByCategoryId(int cat_id) {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id WHERE book_category.category_id = ? GROUP BY books.book_id";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) as rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) as discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE book_category.category_id = ?";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setInt(1, cat_id);
@@ -46,9 +46,15 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
-
-				books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				Float discounted_price = rs.getFloat("discounted_price");
+				
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 
 			return books;
@@ -68,7 +74,7 @@ public class BookDAO {
 
 	public ArrayList<Book> getBooksByPusliherId(int pub_id) {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id WHERE publisher.publisher_id = ? GROUP BY books.book_id";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) as rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) as discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE publisher.publisher_id = ?";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setInt(1, pub_id);
@@ -90,9 +96,15 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
 
-				books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 
 			return books;
@@ -112,7 +124,7 @@ public class BookDAO {
 
 	public ArrayList<Book> getBooksByRating() {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id GROUP BY books.book_id ORDER BY rating DESC";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) as rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) as discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id ORDER BY rating DESC";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			ResultSet rs = myStmt.executeQuery();
@@ -133,9 +145,15 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
 
-				books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 
 			return books;
@@ -155,7 +173,7 @@ public class BookDAO {
 
 	public ArrayList<Book> getBooksByPopularity() {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM order_book JOIN books On order_book.book_id = books.book_id JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id GROUP BY books.book_id ORDER BY COUNT(books.book_id) DESC";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name AS publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY reviews.book_id), 0) as rating, books.price, ROUND(books.price - MAX(books.price * seasonal_promotions.percentage_off), 2) as discounted_price, book_category.category_name, books.image, authors.name FROM order_book JOIN books ON order_book.book_id = books.book_id JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id GROUP BY books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name, books.book_id, books.title, books.description, books.price, book_category.category_name, books.image, authors.name ORDER BY COUNT(books.book_id) DESC";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			ResultSet rs = myStmt.executeQuery();
@@ -176,9 +194,15 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
 
-				books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 
 			return books;
@@ -198,7 +222,7 @@ public class BookDAO {
 
 	public ArrayList<Book> getBooksBySearch(String search) {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name, MAX(orders.order_created) as latest_order FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id LEFT JOIN order_book ON books.book_id = order_book.book_id LEFT JOIN orders ON order_book.orders_id = orders.orders_id WHERE books.title LIKE ? GROUP BY books.book_id";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) as rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) as discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE books.title LIKE ?";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setString(1, "%" + search + "%");
@@ -220,9 +244,16 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
 
-				books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 
 			return books;
@@ -242,7 +273,7 @@ public class BookDAO {
 
 	public ArrayList<Book> getAllBooks() {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id GROUP BY books.book_id";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) as rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) as discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			ResultSet rs = myStmt.executeQuery();
@@ -263,9 +294,15 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
-
-				books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				Float discounted_price = rs.getFloat("discounted_price");
+				
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 
 			return books;
@@ -285,7 +322,7 @@ public class BookDAO {
 
 	public Book getBookById(int bookId) {
 		Connection conn = Database.connect();
-		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, (books.quantity - COALESCE((SELECT SUM(cart.quantity) FROM cart WHERE cart.book_id = ?), 0)) AS quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) as rating, books.price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN reviews ON books.book_id = reviews.book_id WHERE books.book_id = ? GROUP BY books.book_id";
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, (books.quantity - COALESCE((SELECT SUM(cart.quantity) FROM cart WHERE cart.book_id = ?), 0)) AS quantity, books.ISBN, publisher.name as publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) as decimal(1,0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) as rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) as discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE books.book_id = ?";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setInt(1, bookId);
@@ -307,9 +344,15 @@ public class BookDAO {
 				String author_name = rs.getString("name");
 				String publisher_name = rs.getString("publisher_name");
 				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
 
-				return new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
-						creation_date, quantity, publisher_id, author_name, publisher_name, category_name);
+				if (discounted_price == 0.0) {
+					return (new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					return (new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name, discounted_price));
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -417,7 +460,7 @@ public class BookDAO {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Book> getBestSellingBooksWeek() {
 		Connection conn = Database.connect();
 		String query = "SELECT b.book_id, b.title, SUM(ob.quantity) AS total_quantity FROM order_book ob JOIN orders o ON ob.orders_id = o.orders_id JOIN books b ON ob.book_id = b.book_id WHERE WEEK(o.order_created) = WEEK(CURRENT_DATE()) GROUP BY b.book_id, b.title ORDER BY total_quantity DESC LIMIT 10";
@@ -447,7 +490,7 @@ public class BookDAO {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Book> getBestSellingBooksMonth() {
 		Connection conn = Database.connect();
 		String query = "SELECT b.book_id, b.title, SUM(ob.quantity) AS total_quantity FROM order_book ob JOIN orders o ON ob.orders_id = o.orders_id JOIN books b ON ob.book_id = b.book_id WHERE DATE_FORMAT(o.order_created, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m') GROUP BY b.book_id, b.title ORDER BY total_quantity DESC LIMIT 10";
@@ -477,12 +520,12 @@ public class BookDAO {
 		}
 		return null;
 	}
-	
+
 	public String addBook(String imagePath, String title, String ISBN, Float price, Integer quantity,
 			String description, Integer category, Integer author, Integer publisher_id) {
-		
+
 		String code = "error";
-		
+
 		Connection conn = Database.connect();
 		String query = "INSERT INTO books (title, author_id, price, quantity, ISBN, book_category_id, description, image, publisher_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?)";
 
@@ -498,9 +541,9 @@ public class BookDAO {
 			myStmt.setString(8, imagePath);
 			myStmt.setInt(9, publisher_id);
 			myStmt.executeUpdate();
-			
+
 			code = "success";
-			
+
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
@@ -511,28 +554,28 @@ public class BookDAO {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return code;
-		
+
 	}
-	
+
 	public String deleteBookById(int book_id) {
 		String code = "error";
 		Connection conn = Database.connect();
 		String query = "DELETE FROM books WHERE book_id= ?";
-		
+
 		try {
-			
+
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setInt(1, book_id);
 			myStmt.executeUpdate();
 			code = "deleteBook";
-			
+
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
-			
-		}finally {
+
+		} finally {
 			try {
 				conn.close();
 			} catch (SQLException e) {
@@ -540,9 +583,9 @@ public class BookDAO {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return code;
-		
+
 	}
-	
+
 }
