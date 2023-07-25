@@ -37,8 +37,9 @@ public class addOrder extends HttpServlet {
 		ArrayList<Cart> checkout = (ArrayList<Cart>) session.getAttribute("checkout");
 		
 		int cust_id = Integer.parseInt(request.getParameter("cust_id")) ;
+		double total_price  = Double.parseDouble(request.getParameter("total_price"));
 		
-		String code = new CartDAO().checkout(cust_id, checkout);
+		String code = new CartDAO().checkout(cust_id, checkout, total_price);
 		
 		String url = "pages/cart.jsp?code="+code;
 		

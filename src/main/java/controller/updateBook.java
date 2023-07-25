@@ -123,7 +123,9 @@ public class updateBook extends HttpServlet {
 			url = url + "&code=error";
 		}
 		
-		response.sendRedirect(url);
+//		response.sendRedirect(url);
+		request.getRequestDispatcher(url).forward(request, response);
+
 	
 	}
 

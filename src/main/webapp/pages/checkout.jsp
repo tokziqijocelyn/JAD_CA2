@@ -14,12 +14,16 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page import="java.text.DecimalFormat"%>
+
 <script
 	src="https://www.paypal.com/sdk/js?client-id=AWinJf8GPVRc95mbJYzyGOkHw2dOScgpucRq2e05nxk6mc4JUKCAn3y0WUs9AdFhs1-sR4sG-ukDPvHF&currency=SGD"></script>
 
 <body>
 
 	<%
+	DecimalFormat decimalFormat = new DecimalFormat("#.00");
+
 	int customer_id = customer.getCust_id();
 
 	if (!customer.isAuthenticated()) {
@@ -83,7 +87,7 @@
 											<div
 												class="col-md-3 d-flex justify-content-end align-items-center">
 												<h6 class="mb-0">
-													$ <span><%=cartItem.getTotalAmt()%></span>
+													$ <span><%=decimalFormat.format(cartItem.getTotalAmt())%></span>
 												</h6>
 											</div>
 										</div>
@@ -132,7 +136,15 @@
 										<div class="d-flex justify-content-between mb-5">
 											<h5 class="text-uppercase">Total price</h5>
 											<h5>
-												$ <span id="totalPrice"><%=total_price%></span>
+												$ <span id="totalPrice"><%=decimalFormat.format(total_price)%></span>
+											</h5>
+										</div>
+
+										<hr class="my-4">
+										<div class="d-flex justify-content-between mb-5">
+											<h5 class="text-uppercase">Amount Payable - after GST</h5>
+											<h5>
+												$ <span id="totalPrice"><%=decimalFormat.format(Math.round(total_price + total_price * 0.08))%></span>
 											</h5>
 										</div>
 										<%
@@ -141,14 +153,6 @@
 										%>
 
 										<div id="paypal-button-container"></div>
-
-
-										<form action="/JAD_CA2/addOrder" method="post">
-											<input type="hidden" name="cust_id" value="<%=customer_id%>">
-											<input type="hidden" name="checkout" value="checkout">
-											<input type="submit" value="Pay" class="btn btn-primary">
-
-										</form>
 									</div>
 								</div>
 							</div>
@@ -165,7 +169,7 @@
          return actions.order.create({
            purchase_units: [{
              amount: {
-               value: <%=Math.round((total_price * 1.07) * 100.0) / 100.0%> 
+               value: <%=Math.round(total_price + total_price * 0.08)%> 
              }
            }]
          });
@@ -173,9 +177,8 @@
        // Finalize the transaction after payer approval
        onApprove: (data, actions) => {
          return actions.order.capture().then(function(orderData) {
-           // Successful capture! For dev/demo purposes:
-           const transaction = orderData.purchase_units[0].payments.captures[0];
-           window.location.replace("PurchaseSuccessServlet");
+
+        	 window.location.href = <%=request.getContextPath()%>+'/addOrder?cust_id='+<%=customer_id%>+'&total_price='+<%=Math.round(total_price + total_price * 0.08)%>;
          });
        }
      }).render('#paypal-button-container');

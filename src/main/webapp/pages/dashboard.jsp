@@ -6,6 +6,14 @@
 <meta charset="ISO-8859-1">
 <title>BokStore</title>
 </head>
+<style>
+/* Styles for the "cancelled" price (strikethrough) */
+.discounted-price {
+	text-decoration: line-through;
+	color: red; /* You can adjust the color as needed */
+	font-size: 18px; /* Adjust the font size as per your preference */
+}
+</style>
 <body>
 	<%@include file="../adminNav.jsp"%>
 	<%@page import='classes.*'%>
@@ -27,12 +35,11 @@
 	}
 
 	ArrayList<Book> books = (ArrayList<Book>) request.getAttribute("books");
-	
+
 	if (books == null) {
 		response.sendRedirect(request.getContextPath() + "/loadDashboard");
 		return;
 	}
-	
 	%>
 	<%
 	if (!message.equals("")) {
@@ -65,12 +72,13 @@
 					String author = book.getAuthor_name();
 					String publisher_name = book.getPublisher_name();
 					String ISBN = book.getISBN();
+					Float discount_price = book.getDiscount_price();
 				%>
 				<div class="card mb-3">
 					<div class="row no-gutters">
 						<div class="col-md-2">
-							<img src="<%=request.getContextPath() + image%>" alt="Default Image"
-								class="img-fluid rounded"
+							<img src="<%=request.getContextPath() + image%>"
+								alt="Default Image" class="img-fluid rounded"
 								style="object-fit: cover; width: 100%; height: 100%;">
 						</div>
 						<div class="col-md-8">
@@ -101,9 +109,22 @@
 								<h6 class="card-subtitle mb-2 text-muted">
 									$<%=price%></h6>
 								<p class="card-text"><%=description%></p>
-								<p class="card-text font-weight-bold text-uppercase">
-									Category:
-									<%=category_name%></p>
+								<div>
+									<%
+									if (discount_price == null) {
+									%>
+									<span class="badge bg-secondary">$<%=price%></span>
+									<%
+									} else {
+									%>
+									<span class="badge bg-secondary discounted-price">$<%=price%></span>
+									<br /> <span class="badge bg-success">Discounted Price:
+										$<%=discount_price%></span>
+									<%
+									}
+									%>
+									<span class="badge bg-primary"><%=book.getCategory_name()%></span>
+								</div>
 								<p class="card-text font-weight-bold text-uppercase">
 									Publisher:
 									<%=publisher_name%></p>

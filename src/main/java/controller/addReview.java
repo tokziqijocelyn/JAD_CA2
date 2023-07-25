@@ -46,7 +46,9 @@ public class addReview extends HttpServlet {
 			url = url + "&code=success";
 		}
 		
-		response.sendRedirect(url);
+		//response.sendRedirect(url);
+		request.getRequestDispatcher(url).forward(request, response);
+
 	}
 
 	/**

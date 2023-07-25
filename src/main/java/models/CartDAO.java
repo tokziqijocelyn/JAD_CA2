@@ -209,7 +209,7 @@ public class CartDAO {
 		return success;
 	}
 	
-	public String checkout(int cust_id, ArrayList<Cart> checkout) {
+	public String checkout(int cust_id, ArrayList<Cart> checkout, double total_price) {
 		String success = "error";
 		
 		String orderQuery = "INSERT INTO orders (customer_id, address_id, total_price) SELECT ?, address_id, ? AS total_price FROM customer_address WHERE customer_id = ?;";
@@ -223,7 +223,7 @@ public class CartDAO {
 			PreparedStatement orderStmt = conn.prepareStatement(orderQuery, Statement.RETURN_GENERATED_KEYS);
 			orderStmt.setInt(1, cust_id);
 			orderStmt.setInt(3, cust_id);
-			orderStmt.setFloat(2, checkout.get(0).getTotal_price());
+			orderStmt.setDouble(2, total_price);
 	
 			int id = orderStmt.executeUpdate();
 			System.out.println("HIS IS THE ID" + id);
