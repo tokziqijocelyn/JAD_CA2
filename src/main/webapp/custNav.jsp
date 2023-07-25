@@ -1,13 +1,14 @@
 <%@page import='classes.Customer'%>
 <%@page import='models.CustomerDAO'%>
 <%@include file="./styles.jsp"%>
+
 <%
 	Customer customer = new CustomerDAO().initCustomerBySession(session);
 %>
 
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand text-white" href="http://localhost:8080/JAD_CA2/pages/home.jsp">BokStore</a>
+    <a class="navbar-brand text-white" href="http://localhost:8080/JAD_CA2/pages/home.jsp"><i class="bi bi-bookmark-star-fill m-1"></i>BokStore</a>
     <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

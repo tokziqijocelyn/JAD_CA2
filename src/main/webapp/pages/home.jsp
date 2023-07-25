@@ -5,6 +5,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>BokStore</title>
+
 </head>
 <body>
 	<%@page import='classes.*'%>
@@ -12,6 +13,7 @@
 	<%@page import='java.util.TimerTask'%>
 	<%@page import='java.util.ArrayList'%>
 	<%@include file="../custNav.jsp"%>
+	
 	<%
 	String categoryId = request.getParameter("category");
 	String publisherId = request.getParameter("publisher");
@@ -57,7 +59,8 @@
 	%>
 
 	<div class="container-fluid mt-5">
-		<div class="row">
+		<div class="row  d-flex justify-content-evenly">
+
 			<div id="filter" class="col-3">
 				<div class="btn-group" role="group" aria-label="Sort Buttons">
 					<form method="POST" action="/JAD_CA2/loadBooks">
@@ -98,32 +101,31 @@
 					%>
 				</select>
 			</div>
-			<div id="results" class="col-9">
+			<div id="results" class="col-8 ml-5">
 				<%
 				Boolean hasBooks = false;
 				for (Book book : books) {
 					hasBooks = true;
 					Integer book_id = book.getBook_id();
 					String title = book.getTitle();
-					String description = book.getDescription();
 					Integer rating = book.getRating();
 					Float price = book.getPrice();
 					String category_name = book.getCategory_name();
 					String image = book.getImage();
 					String author = book.getAuthor_name();
 					String publisher_name = book.getPublisher_name();
-					String ISBN = book.getISBN();
 				%>
-				<div class="card mb-3">
+				<div class="card border-primary mb-3 rounded-3 p-2">
 					<div class="row no-gutters">
-						<div class="col-md-2">
+						<div class="col-md-3">
 							<img src="<%=request.getContextPath() + image%>" alt="Default Image"
-								class="img-fluid rounded"
-								style="object-fit: cover; width: 100%; height: 100%;">
+								class="img-fluid rounded-2 m-4"
+								style="object-fit: cover; width: 80%; height: 80%;">
 						</div>
-						<div class="col-md-8">
+						<div class="col-md-5">
 							<div class="card-body">
 								<h5 class="card-title font-weight-bold"><%=title%></h5>
+
 								<h6 class="card-subtitle mb-2 text-muted">
 									<%
 									if (rating != 0) {
@@ -146,25 +148,29 @@
 									}
 									%>
 								</h6>
-								<h6 class="card-subtitle mb-2 text-muted">
+								<div>
+								<h6 class="card-subtitle badge rounded-pill bg-primary mb-2 text-muted">
 									$<%=price%></h6>
-								<p class="card-text"><%=description%></p>
-								<p class="card-text"><%=ISBN%></p>
-								<p class="card-text font-weight-bold text-uppercase">
-									Category:
+								
+								<p class="card-text font-weight-bold badge rounded-pill bg-secondary text-uppercase">
 									<%=category_name%></p>
-								<p class="card-text font-weight-bold text-uppercase">
-									Publisher:
-									<%=publisher_name%></p>
-								<p class="card-text">
-									<small class="text-muted">Author: <span
+								</div>
+
+								<div class="card-text">
+									<p>
+										<small class="text-muted">Written By: <span
 										class="font-weight-bold"><%=author%></span></small>
-								</p>
-								<form action="pages/book.jsp">
-									<input type="hidden" name="book_id" value="<%=book_id%>" />
-									<button type="submit" class="btn btn-primary">Go to
-										Book</button>
-								</form>
+										<br>
+										<small class="text-muted">Published By: <span
+										class="font-weight-bold"><%=publisher_name%></span></small>
+									</p>
+									
+								</div>
+									<form action="pages/book.jsp">
+										<input type="hidden" name="book_id" value="<%=book_id%>" />
+										<button type="submit" class="btn btn-primary">View Book <i class="bi bi-arrow-right-circle-fill"></i></button>
+									</form>
+								
 							</div>
 						</div>
 					</div>
