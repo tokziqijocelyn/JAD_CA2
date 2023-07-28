@@ -61,9 +61,11 @@
 		}
 
 		int discount = (int) (promo.getDiscount() * 100);
+
+		if (promo.getNoOfBooks() > 0) {
 	%>
 
-	<div class="banner m-5 mr-5 d-flex d-flex justify-content-evenly"
+	<div class="banner m-5 mr-5 d-flex justify-content-evenly"
 		style="visibility: <%=visible%>;">
 
 		<div>
@@ -88,18 +90,24 @@
 				<!-- EG: -->
 				<div class="carousel-item active p-5" data-bs-interval="2000"
 					style="width: 550px; height: 350px; margin-right: 300px">
-					
+
 					<div>
-						
+
 						<img alt="Discounted Book"
-							src="<%=(request.getContextPath() + "/images/promo.png") %>"
+							src="<%=(request.getContextPath() + "/images/promo.png")%>"
 							style="width: 250px; height: 295px; position: absolute; margin-left: 14px;; z-index: 1">
-							
-						<p class="d-flex justify-content-end">Enjoy 10 Books @</p>
+
+						<h3 class="d-flex justify-content-end">
+							Enjoy
+							<%=promo.getNoOfBooks()%>
+							Books @
+						</h3>
 						<div class="bg-light d-flex w-10 text-dark"
 							style="width: 450px; height: 200px; position: absolute; margin-top: 30px; display: flex; align-items: flex-end; flex-direction: column;">
-							<h1 class="display-1 ml-5 text-warning">50%<br> OFF</h1>
-						</div> 
+							<h1 class="display-1 text-warning"><%=discount%>%<br>
+								OFF
+							</h1>
+						</div>
 						<div class="carousel-caption d-none d-md-block">
 							<h5></h5>
 							<p></p>
@@ -110,19 +118,61 @@
 
 				<%
 				for (Book book : discountedBooks) {
+					Integer rating = book.getRating();
+					Float price = book.getPrice();
+					Float discount_price = book.getDiscount_price();
 				%>
 
 				<div class="carousel-item p-5" data-bs-interval="2000"
 					style="width: 550px; height: 350px; margin-right: 250px;">
 
-					<div>
+					<div style="">
 						<img alt="Discounted Book"
 							src="<%=request.getContextPath() + book.getImage()%>"
-							style="box-shadow: 5px 5px; width: 200px; height: 245px; position: absolute; margin-left: 14px;; z-index: 1">
+							style="box-shadow: 5px 5px; width: 200px; height: 250px; position: absolute; margin-left: 14px;; z-index: 1">
 
-						<div class="bg-primary d-flex w-10 text-light"
-							style="width: 450px; height: 200px; position: absolute; margin-top: 30px; display: flex; align-items: flex-end; flex-direction: column;">
-							<h1><%=book.getTitle()%></h1>
+						<div class="bg-primary d-flex w-10 text-light text-left"
+							style="padding: 20px; width: 450px; height: 200px; position: absolute; margin-top: 30px; display: flex; align-items: flex-end; flex-direction: column;">
+							<h4>
+								Title:
+								<%=book.getTitle()%></h4>
+							<h6 class="card-subtitle mb-2 text-muted">
+								<%
+								if (rating != 0) {
+									for (int i = 0; i < rating; i++) {
+								%>
+								<i class="bi bi-star-fill text-warning"></i>
+								<%
+								}
+								%>
+								<%
+								for (int i = rating; i < 10; i++) {
+								%>
+								<i class="bi bi-star text-muted"></i>
+								<%
+								}
+								} else {
+								%>
+								No Rating :(
+								<%
+								}
+								%>
+							</h6>
+							<div class="d-flex">
+								<s><span class="text-secondary discounted-price">$<%=price%></span>
+								</s>
+								<h5 class="text-warning">
+									$<%=discount_price%></h5>
+							</div>
+
+
+							<form action="pages/book.jsp">
+								<input type="hidden" name="book_id"
+									value="<%=book.getBook_id()%>" />
+								<button type="submit" class="btn btn-light mt-3">
+									View Book <i class="bi bi-arrow-right-circle-fill"></i>
+								</button>
+							</form>
 						</div>
 						<div class="carousel-caption d-none d-md-block">
 							<h5></h5>
@@ -149,6 +199,22 @@
 			</button>
 		</div>
 	</div>
+	<%
+	} else {
+	%>
+
+	<div class="banner m-5 mr-5 ">
+		<div class="d-flex justify-content-evenly ">
+			<img alt=""
+				src="<%=(request.getContextPath() + "/images/noPromo.png")%>"
+				style="width: 550px; height: 350px;">
+			<h3>No Seasonal Special for now...</h3>
+		</div>
+	</div>
+
+	<%
+	}
+	%>
 
 	<%
 	} catch (NullPointerException e) {
