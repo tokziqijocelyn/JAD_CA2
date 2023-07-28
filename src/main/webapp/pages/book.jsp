@@ -20,7 +20,6 @@
 	color: red; /* You can adjust the color as needed */
 	font-size: 18px; /* Adjust the font size as per your preference */
 }
-
 </style>
 <body>
 	<div>
