@@ -15,7 +15,6 @@
 	color: red; /* You can adjust the color as needed */
 	font-size: 18px; /* Adjust the font size as per your preference */
 }
-
 </style>
 
 <body>
@@ -24,6 +23,7 @@
 	<%@page import='java.util.TimerTask'%>
 	<%@page import='java.util.ArrayList'%>
 	<%@include file="../custNav.jsp"%>
+
 
 	<%
 	String categoryId = request.getParameter("category");
@@ -69,10 +69,9 @@
 	}
 	%>
 
-	<div class="container-fluid mt-5">
-		<div class="row  d-flex justify-content-evenly">
-
-			<div id="filter" class="col-3">
+	<div class="container-fluid">
+		<div class="row d-flex justify-content-evenly">
+			<div id="filter" class="col-3 mt-5">
 				<div class="btn-group" role="group" aria-label="Sort Buttons">
 					<form method="POST" action="/JAD_CA2/loadBooks">
 						<input type="hidden" name="sort" value="popularity" />
@@ -112,7 +111,10 @@
 					%>
 				</select>
 			</div>
+
 			<div id="results" class="col-8 ml-5">
+
+				<%@include file="promotions.jsp"%>
 				<%
 				Boolean hasBooks = false;
 				for (Book book : books) {
@@ -169,8 +171,8 @@
 									} else {
 									%>
 									<span class="badge bg-secondary discounted-price">$<%=price%></span>
-									<br /> <span class="badge bg-success">Discounted
-										Price: $<%=discount_price%></span>
+									<br /> <span class="badge bg-success">Discounted Price:
+										$<%=discount_price%></span>
 									<%
 									}
 									%>
