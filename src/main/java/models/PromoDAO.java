@@ -9,7 +9,7 @@ public class PromoDAO {
 	
 	public Promo getCurrentPromotion() {
 		Promo promo = null;
-		String query = "SELECT promotion_name, percentage_off FROM seasonal_promotions WHERE promotion_id = ? ";
+		String query = "SELECT sp.promotion_name, sp.percentage_off, COUNT(bp.book_id) as numberOfBooks FROM seasonal_promotions as sp JOIN book_promotions as bp ON bp.promotion_id = sp.promotion_id WHERE sp.promotion_id = ?;";
 		Connection conn = Database.connect();
 
 		try {
@@ -23,7 +23,8 @@ public class PromoDAO {
 			if (rs.next()) {
 				String promotion_name = rs.getString("promotion_name");
 				double discount = rs.getDouble("percentage_off");
-				promo = new Promo(promotion_name, discount);
+				int noOfBooks = rs.getInt("numberOfBooks");
+				promo = new Promo(promotion_name, discount, noOfBooks);
 			}
 			
 		} 

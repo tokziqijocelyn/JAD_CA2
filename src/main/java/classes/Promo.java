@@ -4,11 +4,13 @@ public class Promo {
 	
 	private String promoName = "";
 	private double discount = 0;
+	private int noOfBooks = 0;
 	
-	public Promo(String promoName, double discount) {
+	public Promo(String promoName, double discount, int noOfBooks) {
 		super();
 		this.promoName = promoName;
 		this.discount = discount;
+		this.noOfBooks = noOfBooks;
 	}
 	
 	public String getPromoName() {
@@ -23,7 +25,13 @@ public class Promo {
 	public void setDiscount(double discount) {
 		this.discount = discount;
 	}
-
+	public int getNoOfBooks() {
+		return noOfBooks;
+	}
+	public void setNoOfBooks(int noOfBooks) {
+		this.noOfBooks = noOfBooks;
+	}
+	
 	
 
 }
