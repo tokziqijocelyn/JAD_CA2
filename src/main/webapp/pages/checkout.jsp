@@ -178,8 +178,15 @@
        onApprove: (data, actions) => {
          return actions.order.capture().then(function(orderData) {
 
-        	 window.location.href = <%=request.getContextPath()%>+'/addOrder?cust_id='+<%=customer_id%>+'&total_price='+<%=Math.round(total_price + total_price * 0.08)%>;
-         });
+        	  // Assuming customer_id and total_price are already defined in your JSP code
+        	  var customer_id = <%=customer_id%>;
+        	  var total_price = <%=Math.round(total_price + total_price * 0.08)%>;
+
+        	  // Construct the URL using JavaScript string concatenation
+        	  var url = '<%=request.getContextPath()%>/addOrder?cust_id=' + customer_id + '&total_price=' + total_price;
+
+        	  // Redirect to the constructed URL
+        	  window.location.href = url;         });
        }
      }).render('#paypal-button-container');
    </script>
