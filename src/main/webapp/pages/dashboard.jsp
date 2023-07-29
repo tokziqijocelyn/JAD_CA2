@@ -137,7 +137,7 @@
 								</p>
 								<form action="/JAD_CA2/getBook">
 									<input type="hidden" name="book_id" value="<%=book_id%>" />
-									<button type="submit" class="btn btn-primary">View
+									<button type="submit" class="btn btn-primary">Edit
 										Book</button>
 								</form>
 							</div>

@@ -190,6 +190,45 @@ body {
 			</div>
 
 		</div>
+
+		<hr>
+
+		<div class="d-flex justify-content-center m-5">
+			<%@page import="classes.Promo"%>
+			<%@page import="models.PromoDAO"%>
+			<%@page import="java.util.ArrayList"%>
+			<%
+			ArrayList<Promo> allPromos = new PromoDAO().getAllPromos();
+			%>
+			<form action="/JAD_CA2/UpdateBookPromo"
+				class="d-flex justify-content-center ">
+				<input type="hidden" name="book_id" value="<%=book.getBook_id()%>" />
+				<fieldset class="form-group">
+					<legend class="m-2">
+						<h1>Seasonal Promotion</h1>
+					</legend>
+
+	
+					<%
+					for (Promo promo : allPromos) {
+					%>
+
+					<div class="form-check m-2">
+						<input name="promo" class="form-check-input" type="checkbox"
+							value="<%=promo.getPromotionId()%>" id="<%=promo.getPromoName()%>">
+						<label class="form-check-label" for="<%=promo.getPromoName()%>">
+							<h5><%=promo.getPromoName()%></h5>
+						</label>
+					</div>
+
+					<%
+					}
+					%>
+				</fieldset>
+			</form>
+
+		</div>
+
 	</div>
 
 	<div class="container my-5">
