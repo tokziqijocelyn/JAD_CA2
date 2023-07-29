@@ -1,12 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Promotions</title>
-</head>
-<body>
+
 	<%@page import='classes.*'%>
 	<%@page import='models.PromoDAO'%>
 	<%@page import='models.BookDAO'%>
@@ -147,11 +139,11 @@
 								%>
 								<%
 								for (int i = rating; i < 10; i++) {
-								%>
+								%> 
 								<i class="bi bi-star text-muted"></i>
 								<%
 								}
-								} else {
+								} else { 
 								%>
 								No Rating :(
 								<%
@@ -222,5 +214,3 @@
 	}
 	%>
 
-</body>
-</html>

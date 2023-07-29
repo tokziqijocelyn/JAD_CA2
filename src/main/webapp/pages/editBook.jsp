@@ -20,9 +20,7 @@ body {
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<%@page import="classes.Book"%>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<%
 
-	%>
 	<%
 	String code = request.getParameter("code");
 	String message = "";
@@ -31,8 +29,11 @@ body {
 			message = "Book Updated Successfully";
 		} else if (code.equals("error")) {
 			message = "An error has occured";
+		} else if (code.equals("successPromo")){
+			message = "Successfully updated promotion!";
 		}
 	}
+	
 	String filter = request.getParameter("filter");
 	if (filter == null) {
 		filter = "today";
@@ -190,6 +191,67 @@ body {
 			</div>
 
 		</div>
+
+		<hr>
+
+		<div class="d-flex justify-content-center m-5">
+			<%@page import="classes.Promo"%>
+			<%@page import="models.PromoDAO"%>
+			<%@page import="java.util.ArrayList"%>
+			<%
+			ArrayList<Promo> allPromos = new PromoDAO().getAllPromosWithId(book.getBook_id());
+			%>
+			<form action="/JAD_CA2/UpdateBookPromo"
+				class="d-flex justify-content-center ">
+				<input type="hidden" name="book_id" value="<%=book.getBook_id()%>" />
+				<fieldset class="form-group">
+					<legend class="m-2">
+						<h1>Seasonal Promotion</h1>
+					</legend>
+
+					<%
+					for (Promo promo : allPromos) {
+						
+						if (promo.getNoOfBooks() == 0 ){
+							
+						
+					%>
+					<div class="form-check m-2">
+						<input name="promo" class="form-check-input" type="checkbox"
+							value="<%=promo.getPromotionId()%>"
+							id="<%=promo.getPromoName()%>"> <label
+							class="form-check-label" for="<%=promo.getPromoName()%>">
+							<h5><%=promo.getPromoName()%></h5>
+						</label>
+					</div>
+
+					<%}else{ %>
+
+					<div class="form-check m-2">
+						<input name="promo" class="form-check-input" type="checkbox"
+							value="<%=promo.getPromotionId()%>"
+							id="<%=promo.getPromoName()%>" checked> <label
+							class="form-check-label" for="<%=promo.getPromoName()%>">
+							<h5><%=promo.getPromoName()%></h5>
+						</label>
+					</div>
+
+					<%
+					}}
+					%>
+
+					<div class="m-5 d-flex justify-content-center">
+						<input type="submit" value="Update Season" class="btn btn-primary">
+					</div>
+
+				</fieldset>
+
+
+
+			</form>
+
+		</div>
+
 	</div>
 
 	<div class="container my-5">

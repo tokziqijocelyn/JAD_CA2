@@ -641,5 +641,178 @@ public class BookDAO {
 		
 		return books;
 	}
+	
+	public ArrayList<Book> getNoStockBooks() {
+		Connection conn = Database.connect();
+		ArrayList<Book> books = new ArrayList<>();
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name AS publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) AS DECIMAL(1, 0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) AS rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) AS discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE books.quantity = 0";
+		try {
+			PreparedStatement myStmt = conn.prepareStatement(query);
+			ResultSet rs = myStmt.executeQuery();
+			while (rs.next()) {
+				Integer book_id = rs.getInt("book_id");
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				String ISBN = rs.getString("ISBN");
+				Integer rating = rs.getInt("rating");
+				Float price = rs.getFloat("price");
+				Integer category_id = rs.getInt("book_category_id");
+				String image = rs.getString("image");
+				Integer author_id = rs.getInt("author_id");
+				String creation_date = rs.getString("creation_date");
+				Integer quantity = rs.getInt("quantity");
+				Integer publisher_id = rs.getInt("publisher_id");
+				String author_name = rs.getString("name");
+				String publisher_name = rs.getString("publisher_name");
+				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
 
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name,
+							discounted_price));
+				}
+			}
+
+			return books;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return books;
+	}
+	
+	public ArrayList<Book> getLowStockBooks() {
+		Connection conn = Database.connect();
+		ArrayList<Book> books = new ArrayList<>();
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name AS publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) AS DECIMAL(1, 0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) AS rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) AS discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE books.quantity < 100  AND books.quantity > 0";
+		try {
+			PreparedStatement myStmt = conn.prepareStatement(query);
+			ResultSet rs = myStmt.executeQuery();
+			while (rs.next()) {
+				Integer book_id = rs.getInt("book_id");
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				String ISBN = rs.getString("ISBN");
+				Integer rating = rs.getInt("rating");
+				Float price = rs.getFloat("price");
+				Integer category_id = rs.getInt("book_category_id");
+				String image = rs.getString("image");
+				Integer author_id = rs.getInt("author_id");
+				String creation_date = rs.getString("creation_date");
+				Integer quantity = rs.getInt("quantity");
+				Integer publisher_id = rs.getInt("publisher_id");
+				String author_name = rs.getString("name");
+				String publisher_name = rs.getString("publisher_name");
+				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
+
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name,
+							discounted_price));
+				}
+			}
+
+			return books;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return books;
+	}
+	
+	public ArrayList<Book> getHighStockBooks() {
+		Connection conn = Database.connect();
+		ArrayList<Book> books = new ArrayList<>();
+		String query = "SELECT books.creation_date, books.book_category_id, books.author_id, books.publisher_id, books.quantity, books.ISBN, publisher.name AS publisher_name, books.book_id, books.title, books.description, IFNULL((SELECT CAST(AVG(IFNULL(reviews.rating, 0.0)) AS DECIMAL(1, 0)) FROM reviews WHERE reviews.book_id = books.book_id GROUP BY books.book_id), 0) AS rating, books.price, ROUND(books.price - books.price * seasonal_promotions.percentage_off, 2) AS discounted_price, book_category.category_name, books.image, authors.name FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN publisher ON books.publisher_id = publisher.publisher_id JOIN authors ON books.author_id = authors.author_id LEFT JOIN book_promotions ON books.book_id = book_promotions.book_id AND DAYOFWEEK(CURRENT_DATE) - 1 = book_promotions.promotion_id LEFT JOIN seasonal_promotions ON book_promotions.promotion_id = seasonal_promotions.promotion_id WHERE books.quantity > 100  AND books.quantity > 0";
+		try {
+			PreparedStatement myStmt = conn.prepareStatement(query);
+			ResultSet rs = myStmt.executeQuery();
+			while (rs.next()) {
+				Integer book_id = rs.getInt("book_id");
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				String ISBN = rs.getString("ISBN");
+				Integer rating = rs.getInt("rating");
+				Float price = rs.getFloat("price");
+				Integer category_id = rs.getInt("book_category_id");
+				String image = rs.getString("image");
+				Integer author_id = rs.getInt("author_id");
+				String creation_date = rs.getString("creation_date");
+				Integer quantity = rs.getInt("quantity");
+				Integer publisher_id = rs.getInt("publisher_id");
+				String author_name = rs.getString("name");
+				String publisher_name = rs.getString("publisher_name");
+				String category_name = rs.getString("category_name");
+				Float discounted_price = rs.getFloat("discounted_price");
+
+				if (discounted_price == 0.0) {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name));
+				} else {
+					books.add(new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
+							creation_date, quantity, publisher_id, author_name, publisher_name, category_name,
+							discounted_price));
+				}
+			}
+
+			return books;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return books;
+	}
+
+	public void updateBookQuantity(Integer book_id, Integer quantity) {
+		Connection conn = Database.connect();
+		String query = "UPDATE books SET quantity = ? WHERE book_id = ?";
+		try {
+			PreparedStatement myStmt = conn.prepareStatement(query);
+			myStmt.setInt(1, quantity);
+			myStmt.setInt(2, book_id);
+
+			myStmt.executeUpdate();
+			return;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }
