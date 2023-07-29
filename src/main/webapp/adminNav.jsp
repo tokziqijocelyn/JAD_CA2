@@ -33,7 +33,9 @@ if (!admin.isAuthenticated()) {
 				<li class="nav-item"><a class="nav-link text-white"
 					href="http://localhost:8080/JAD_CA2/pages/customers.jsp">View
 						Customers</a></li>
-
+				<li class="nav-item"><a class="nav-link text-white"
+					href="http://localhost:8080/JAD_CA2/pages/stocks.jsp">View
+						Stocks</a></li>
 
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
