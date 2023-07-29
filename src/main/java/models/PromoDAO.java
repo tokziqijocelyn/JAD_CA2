@@ -117,5 +117,40 @@ public class PromoDAO {
 		
 		return code;
 	}
+	
+	public String updatePromoById(int promoId, String name, double percent) {
+		String code ="error";
+
+		String query = "UPDATE seasonal_promotions SET promotion_name = ?, percentage_off = ? WHERE promotion_id = ?;";
+		Connection conn = Database.connect();
+
+		try {
+			PreparedStatement myStmt = conn.prepareStatement(query);
+			myStmt.setString(1, name);
+			myStmt.setDouble(2, (percent/100));
+			myStmt.setInt(3, promoId);
+			
+			int affectedRows = myStmt.executeUpdate();
+			
+			if (affectedRows > 0) {
+				code = "success";
+			}
+		} 
+		
+		catch (Exception e ) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return code;
+	}
 
 }
