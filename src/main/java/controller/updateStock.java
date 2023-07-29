@@ -34,8 +34,7 @@ public class updateStock extends HttpServlet {
 		// TODO Auto-generated method stub
 		Integer book_id = Integer.parseInt(request.getParameter("book_id"));
 		Integer quantity = Integer.parseInt(request.getParameter("quantity"));
-		System.out.println(book_id);
-		System.out.println(quantity);
+
 		BookDAO bookDAO = new BookDAO();
 		bookDAO.updateBookQuantity(book_id, quantity);
 		ArrayList<Book> no_stock = bookDAO.getNoStockBooks();
