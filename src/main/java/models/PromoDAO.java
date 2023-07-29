@@ -45,15 +45,16 @@ public class PromoDAO {
 		return promo;
 	}
 	
-	public ArrayList<Promo> getAllPromos(){
+	public ArrayList<Promo> getAllPromosWithId(int book_id){
 		
 		ArrayList<Promo> allPromos = new ArrayList<Promo>();
 
-		String query = "SELECT sp.promotion_id, sp.promotion_name, sp.percentage_off, COALESCE(COUNT(bp.book_id), 0) AS numberOfBooks FROM seasonal_promotions AS sp LEFT JOIN book_promotions AS bp ON bp.promotion_id = sp.promotion_id GROUP BY sp.promotion_name, sp.percentage_off;";
+		String query = "SELECT sp.promotion_id, sp.promotion_name, sp.percentage_off, COALESCE(COUNT(bp.book_id), 0) AS numberOfBooks FROM seasonal_promotions AS sp LEFT JOIN book_promotions AS bp ON bp.promotion_id = sp.promotion_id AND bp.book_id = ? GROUP BY sp.promotion_id, sp.promotion_name, sp.percentage_off;";
 		Connection conn = Database.connect();
 
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
+			myStmt.setInt(1, book_id);
 			ResultSet rs = myStmt.executeQuery();
 			
 			while (rs.next()) {
@@ -81,8 +82,8 @@ public class PromoDAO {
 		return allPromos;
 	}
 	
-	public String updateBookPromo(int book_id, int[] promos) {
-		String code = "";
+	public String updateBookPromo(int book_id, ArrayList<Integer> chosenPromo ) {
+		String code = "error";
 		Connection conn = Database.connect();
 		String deleteQuery = "DELETE FROM book_promotions WHERE book_id = ?;";
 		String insertQuery = "INSERT INTO book_promotions (book_id, promotion_id) VALUES (?, ?);";
@@ -90,11 +91,16 @@ public class PromoDAO {
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(deleteQuery);
 			myStmt.setInt(1, book_id);
-			ResultSet rs = myStmt.executeQuery();
+			myStmt.executeUpdate();
 			
-			for (int promo : promos) {
-				
+			for (int promoId : chosenPromo) {
+				PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+				insertStmt.setInt(1, book_id);
+				insertStmt.setInt(2, promoId);
+				insertStmt.executeUpdate();
 			}
+			
+			code = "successPromo";
 		} 
 		
 		catch (Exception e ) {
