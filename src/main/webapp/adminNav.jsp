@@ -39,8 +39,7 @@ if (!admin.isAuthenticated()) {
 
 				<li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#"
-					role="button" aria-haspopup="true" aria-expanded="false">Edit
-						Books</a>
+					role="button" aria-haspopup="true" aria-expanded="false"> Books</a>
 					<div class="dropdown-menu" data-bs-popper="static">
 						<a class="nav-link text-white dropdown-item"
 							href="http://localhost:8080/JAD_CA2/pages/author.jsp">Authors</a>
@@ -50,6 +49,8 @@ if (!admin.isAuthenticated()) {
 							href="http://localhost:8080/JAD_CA2/pages/category.jsp">Category</a>
 						<a class="nav-link text-white dropdown-item"
 							href="http://localhost:8080/JAD_CA2/pages/publisher.jsp">Publisher</a>
+						<a class="nav-link text-white dropdown-item"
+							href="http://localhost:8080/JAD_CA2/pages/editPromo.jsp">Promotions</a>
 					</div></li>
 
 				<li class="nav-item dropdown"><a
@@ -60,9 +61,9 @@ if (!admin.isAuthenticated()) {
 							href="http://localhost:8080/JAD_CA2/pages/bestSellers.jsp">Best
 							Selling Books</a> <a class="nav-link text-white dropdown-item"
 							href="http://localhost:8080/JAD_CA2/pages/salesReport.jsp">Sales
-							Report</a>
-							<a class="nav-link text-white dropdown-item"
-							href="http://localhost:8080/JAD_CA2/pages/topCustomers.jsp">View Top Customers</a>
+							Report</a> <a class="nav-link text-white dropdown-item"
+							href="http://localhost:8080/JAD_CA2/pages/topCustomers.jsp">View
+							Top Customers</a>
 					</div></li>
 
 				<li class="nav-item dropdown"><a
