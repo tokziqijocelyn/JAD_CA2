@@ -44,9 +44,12 @@
         <li class="nav-item">          
           <%
           	if (customer.isAuthenticated()) {
+          		int cust_id = customer.getCust_id();
+          		session.setAttribute("cust_id", cust_id);
+
           		%>
 
-        		<a class="nav-link text-white" href= <%="/JAD_CA2/loadCart?cust_id="+customer.getCust_id() %>>Cart</a>
+        		<a class="nav-link text-white" href="/JAD_CA2/loadCart">Cart</a>
 
  
           		<%
