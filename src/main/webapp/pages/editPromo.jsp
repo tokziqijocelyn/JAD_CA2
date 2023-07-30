@@ -62,7 +62,7 @@
 								%>
 								<option value="<%=promo.getPromotionId()%>"><%=promo.getPromoName()%></option>
 
-
+ 
 								<%
 								}
 								%>
@@ -71,8 +71,7 @@
 					</fieldset>
 
 					<div class="m-4">
-						New Season Name: <br> <input type="text" name="name" required
-							value="awjkdh" class="form-control"> <br> New Discount Percentage: [eg 50 = 50%]<br>
+						New Season Name: <br> <input type="text" name="name" required class="form-control"> <br> New Discount Percentage: [eg 50 = 50%]<br>
 						<input type="number" class="form-control" name="percentage" max=90 required>%
 					</div>
 
