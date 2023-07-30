@@ -25,7 +25,7 @@
 	<%@include file="../custNav.jsp"%>
 
 
-	<%
+	<%	
 	String categoryId = request.getParameter("category");
 	String publisherId = request.getParameter("publisher");
 	int category_id;
@@ -113,7 +113,6 @@
 			</div>
 
 			<div id="results" class="col-8 ml-5">
-
 				<%@include file="promotions.jsp"%>
 				<%
 				Boolean hasBooks = false;

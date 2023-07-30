@@ -13,8 +13,11 @@
 
 	//handling promotions =========================
 	Promo promo = null;
-	LocalDate today = LocalDate.now();
-	int day = today.getDayOfWeek().getValue();
+    LocalDate today = LocalDate.now();
+    int day = today.getDayOfWeek().getValue();
+    if (day == 7) {
+        day = 0; 
+    }
 	try {
 		ArrayList<Book> discountedBooks = new BookDAO().getDiscountedBooks(day);
 		promo = new PromoDAO().getCurrentPromotion();
@@ -44,7 +47,7 @@
 			color = "#FAFABE";
 			icon = "fa-solid fa-face-surprise fa-spin-pulse";
 			break;
-		case 7:
+		case 0:
 			color = "#C1EBC0";
 			icon = "fa-solid fa-face-laugh-squint fa-bounce";
 			break;
@@ -56,10 +59,12 @@
 
 		if (promo.getNoOfBooks() > 0) {
 	%>
+	
+	
 
 	<div class="banner m-5 mr-5 d-flex justify-content-evenly"
 		style="visibility: <%=visible%>;">
-
+		
 		<div>
 			<div style="background: <%=color%>;"
 				class="p-4 m-1 text-align-center">
@@ -73,6 +78,7 @@
 
 		</div>
 
+
 		<div id="carouselExampleDark" class="carousel carousel-dark slide"
 			data-bs-ride="carousel">
 
@@ -84,7 +90,6 @@
 					style="width: 550px; height: 350px; margin-right: 300px">
 
 					<div>
-
 						<img alt="Discounted Book"
 							src="<%=(request.getContextPath() + "/images/promo.png")%>"
 							style="width: 250px; height: 295px; position: absolute; margin-left: 14px;; z-index: 1">
@@ -117,7 +122,7 @@
 
 				<div class="carousel-item p-5" data-bs-interval="2000"
 					style="width: 550px; height: 350px; margin-right: 250px;">
-
+					
 					<div style="">
 						<img alt="Discounted Book"
 							src="<%=request.getContextPath() + book.getImage()%>"
@@ -196,6 +201,8 @@
 	%>
 
 	<div class="banner m-5 mr-5 ">
+						<h1>ALIWDJUHKAWUDYHUAWHD</h1>
+						<h1>Day <%=day %></h1>
 		<div class="d-flex justify-content-evenly ">
 			<img alt=""
 				src="<%=(request.getContextPath() + "/images/noPromo.png")%>"
