@@ -62,8 +62,6 @@
 								%>
 								<option value="<%=promo.getPromotionId()%>"><%=promo.getPromoName()%></option>
 
-<<<<<<< HEAD
-
 								<%
 								}
 								%>
@@ -74,18 +72,12 @@
 					<div class="m-4">
 						New Season Name: <br> <input type="text" name="name" required
 							value="awjkdh" class="form-control"> <br> New Discount Percentage: [eg 50 = 50%]<br>
-=======
  
-								<%
-								}
-								%>
-							</select>
 						</div>
 					</fieldset>
 
 					<div class="m-4">
 						New Season Name: <br> <input type="text" name="name" required class="form-control"> <br> New Discount Percentage: [eg 50 = 50%]<br>
->>>>>>> branch 'master' of https://github.com/tokziqijocelyn/JAD_CA2.git
 						<input type="number" class="form-control" name="percentage" max=90 required>%
 					</div>
 

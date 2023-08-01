@@ -112,10 +112,7 @@
 			</div>
 
 			<div id="results" class="col-8 ml-5">
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'master' of https://github.com/tokziqijocelyn/JAD_CA2.git
+			
 				<%@include file="promotions.jsp"%>
 				<%
 				Boolean hasBooks = false;
