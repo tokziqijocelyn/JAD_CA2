@@ -86,16 +86,12 @@ public class PromoDAO {
 		return allPromos;
 	}
 	
-	public String updateBookPromo(int book_id, ArrayList<Integer> chosenPromo ) {
+	public String addBookPromo(int book_id, ArrayList<Integer> chosenPromo ) {
 		String code = "error";
 		Connection conn = Database.connect();
-		String deleteQuery = "DELETE FROM book_promotions WHERE book_id = ?;";
 		String insertQuery = "INSERT INTO book_promotions (book_id, promotion_id) VALUES (?, ?);";
 		
 		try {
-			PreparedStatement myStmt = conn.prepareStatement(deleteQuery);
-			myStmt.setInt(1, book_id);
-			myStmt.executeUpdate();
 			
 			for (int promoId : chosenPromo) {
 				PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
@@ -120,6 +116,35 @@ public class PromoDAO {
 		}
 		
 		return code;
+	}
+	
+	public boolean deleteAllPromo(int book_id) {
+		boolean success = false;
+		Connection conn = Database.connect();
+		String deleteQuery = "DELETE FROM book_promotions WHERE book_id = ?;";
+		
+		try {
+			PreparedStatement myStmt = conn.prepareStatement(deleteQuery);
+			myStmt.setInt(1, book_id);
+			myStmt.executeUpdate();
+			
+			success = true;
+		} 
+		
+		catch (Exception e ) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return success;
+		
 	}
 	
 	public String updatePromoById(int promoId, String name, double percent) {

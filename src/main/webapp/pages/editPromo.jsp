@@ -14,7 +14,6 @@
 	<%@page import='models.PromoDAO'%>
 
 	<%
-	
 	String code = request.getParameter("code");
 	String message = "";
 	if (code != null) {
@@ -24,10 +23,10 @@
 			message = "An error occured";
 		}
 	}
-	
+
 	ArrayList<Promo> allPromos = new PromoDAO().getAllPromosWithId(0);
 	%>
-	
+
 	<%
 	if (!message.equals("")) {
 	%>
@@ -67,21 +66,17 @@
 								%>
 							</select>
 						</div>
-					</fieldset>
 
-					<div class="m-4">
-						New Season Name: <br> <input type="text" name="name" required
-							value="awjkdh" class="form-control"> <br> New Discount Percentage: [eg 50 = 50%]<br>
- 
+
+						<div class="m-4">
+							New Season Name: <br> <input type="text" name="name"
+								required class="form-control"> <br> New Discount
+							Percentage: [eg 50 = 50%]<br> <input type="number"
+								class="form-control" name="percentage" max=90 required>%
 						</div>
+
+						<input type="submit" class="btn btn-primary" value="Edit">
 					</fieldset>
-
-					<div class="m-4">
-						New Season Name: <br> <input type="text" name="name" required class="form-control"> <br> New Discount Percentage: [eg 50 = 50%]<br>
-						<input type="number" class="form-control" name="percentage" max=90 required>%
-					</div>
-
-					<input type="submit" class="btn btn-primary" value="Edit">
 				</form>
 			</div>
 		</div>

@@ -21,6 +21,8 @@
 	ArrayList<String> x_axis = (ArrayList<String>) request.getAttribute("x_axis");
 	ArrayList<Double> y_axis = (ArrayList<Double>) request.getAttribute("y_axis");
 
+
+
 	if (x_axis == null || y_axis == null) {
 		response.sendRedirect(request.getContextPath() + "/loadSales");
 		return;
@@ -33,6 +35,7 @@
 			<div class="col-md-4">
 				<h2 class="mb-4">
 					<u><b>Sales Report</b></u>
+
 				</h2>
 				<select class="form-select mb-2" id="filter">
 					<option <%=filter.equals("today") ? "selected" : ""%> value="today">Today</option>
@@ -51,6 +54,8 @@
 			</div>
 		</div>
 	</div>
+
+
 
 
 	<script>	

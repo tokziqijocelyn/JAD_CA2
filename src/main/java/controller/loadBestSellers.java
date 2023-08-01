@@ -33,7 +33,7 @@ public class loadBestSellers extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String filter = request.getParameter("filter");
-
+		System.out.print("hello??");
 		ArrayList<Book> books;
 		BookDAO bookDao = new BookDAO();
 		
@@ -53,8 +53,13 @@ public class loadBestSellers extends HttpServlet {
 			x_axis.add(book.getTitle());
 		}
 		
+		Book topBook = bookDao.getBestSellingBook();
+		
+		System.out.print(topBook.getISBN());
+		
 		request.setAttribute("x_axis", x_axis);
 		request.setAttribute("y_axis", y_axis);
+		request.setAttribute("topBook", topBook);
 		request.getRequestDispatcher("/pages/bestSellers.jsp").forward(request, response);
 	}
 

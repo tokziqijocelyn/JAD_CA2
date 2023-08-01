@@ -144,6 +144,9 @@
 							<input type="submit" class="btn btn-danger ml-2"
 								value="Login To Add To Cart">
 						</form>
+						<p class="text-secondary">
+							Stocks left:
+							<%=quantity%></p>
 						<%
 						} else {
 						%>

@@ -23,19 +23,24 @@
 
 	ArrayList<String> x_axis = (ArrayList<String>) request.getAttribute("x_axis");
 	ArrayList<Integer> y_axis = (ArrayList<Integer>) request.getAttribute("y_axis");
+	
 
 	if (x_axis == null || y_axis == null) {
 		response.sendRedirect(request.getContextPath() + "/loadBestSellers");
 		return;
 	}
+	
+	Book book = (Book) request.getAttribute("topBook");
+	 
 	%>
 
 	<div class="container my-5">
 		<div class="row mx-2">
-
+			<h1><%=book.getTitle()%></h1>
 			<div class="col-md-4">
 				<h2 class="mb-4">
 					<u><b>Best Selling Books</b></u>
+		
 				</h2>
 				<select class="form-select mb-2" id="filter">
 					<option <%=filter.equals("today") ? "selected" : ""%> value="today">Today</option>
@@ -53,11 +58,11 @@
 				</div>
 			</div>
 		</div>
+		
+	
+		
+		<% %>
 	</div>
-
-
-
-
 
 	<script>	
 		const ctx = document.getElementById('myChart');

@@ -36,14 +36,36 @@ public class UpdateBookPromo extends HttpServlet {
 
 		String code = "error";
 		int book_id = (int) Integer.parseInt(request.getParameter("book_id"));
-		String[] sSeasons = request.getParameterValues("promo");
-		ArrayList<Integer> chosenSeasons = new ArrayList<>();
-		for (String s : sSeasons) {
-			chosenSeasons.add(Integer.parseInt(s));
-		}
-		code = new PromoDAO().updateBookPromo(book_id, chosenSeasons);
+		try {
 
-		request.getRequestDispatcher("getBook?book_id=" + book_id + "&code=" + code).forward(request, response);
+			String[] sSeasons = request.getParameterValues("promo");
+			ArrayList<Integer> chosenSeasons = new ArrayList<>();
+			for (String s : sSeasons) {
+				chosenSeasons.add(Integer.parseInt(s));
+			}
+
+			PromoDAO promoDAO = new PromoDAO();
+
+			boolean deleted = promoDAO.deleteAllPromo(book_id);
+
+			if (deleted && sSeasons != null) {
+				code = promoDAO.addBookPromo(book_id, chosenSeasons);
+			}
+
+			request.getRequestDispatcher("getBook?book_id=" + book_id + "&code=" + code).forward(request, response);
+
+		} catch (NullPointerException e) {
+
+			boolean deleted = new PromoDAO().deleteAllPromo(book_id);
+			request.getRequestDispatcher("getBook?book_id=" + book_id + "&code=successPromo").forward(request,
+					response);
+
+		}
+
+		catch (Exception e) {
+
+		}
+
 	}
 
 	/**

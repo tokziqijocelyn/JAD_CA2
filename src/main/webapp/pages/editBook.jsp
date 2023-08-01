@@ -213,8 +213,7 @@ body {
 					for (Promo promo : allPromos) {
 						
 						if (promo.getNoOfBooks() == 0 ){
-							
-						
+
 					%>
 					<div class="form-check m-2">
 						<input name="promo" class="form-check-input" type="checkbox"
