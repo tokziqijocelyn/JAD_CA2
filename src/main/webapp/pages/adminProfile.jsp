@@ -93,9 +93,7 @@
 		</div>
 	</div>
 </body>
-<%
-// conn.close();
-%>
+
 <script>
 	// JavaScript to handle the button click
 	var isEditable = false;

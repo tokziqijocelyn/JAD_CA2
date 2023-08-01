@@ -7,11 +7,9 @@
 <title>BokStore</title>
 </head>
 <body>
-	<%@page import='classes.Database'%>
-	<%@page import='java.sql.*'%>
+	<%@page import='classes.*'%>
 	<%@include file="../custNav.jsp"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-	<%@ page import="classes.Customer"%>
 	<%@ page import="java.sql.*,java.util.*,java.text.SimpleDateFormat"%>
 	<%@ page import="java.util.Date"%>
 
@@ -50,12 +48,12 @@
 			<div class="col-md-5">
 				<div class="project-info-box mt-0">
 					<h2>
-						<u><b>CUSTOMER DETAILS  </b></u>
+						<u><b>CUSTOMER DETAILS </b></u>
 					</h2>
 					<form action="/JAD_CA2/updateCustomer" method="POST"
 						enctype="multipart/form-data">
-						<input type="hidden" name="cust" value="1">
-						<input type="hidden" name="cust_id" value="<%=cust_id%>" />
+						<input type="hidden" name="cust" value="1"> <input
+							type="hidden" name="cust_id" value="<%=cust_id%>" />
 						<p>
 							<b><u>Username: </u></b> <input type="text" class="form-control"
 								id="username" value="<%=customer.getUsername()%>" required
@@ -96,7 +94,7 @@
 						<input type="file" name="image" id="image" accept="image/*"
 							class="custom-file-input" disabled> <input type="hidden"
 							name="image_url" value="<%=customer.getImage_url()%>">
-							
+
 						<button id="editButton" type="submit" class="btn btn-primary">Edit</button>
 
 					</form>
@@ -105,8 +103,8 @@
 
 			<div class="col-md-7">
 				<div class="col-6">
-					<img src="<%=request.getContextPath()+customer.getImage_url()%>" alt="Customer Image"
-						class="rounded img-fluid" id="preview">
+					<img src="<%=request.getContextPath() + customer.getImage_url()%>"
+						alt="Customer Image" class="rounded img-fluid" id="preview">
 				</div>
 
 				<div class="project-info-bo mt-3">
@@ -126,47 +124,6 @@
 				</div>
 			</div>
 		</div>
-		<%
-		Connection conn = Database.connect();
-		String query = "SELECT orders.orders_id, orders.order_created, books.title, books.ISBN, books.price, order_book.quantity FROM orders JOIN order_book ON orders.orders_id = order_book.orders_id JOIN books ON order_book.book_id = books.book_id WHERE orders.customer_id = ? ORDER BY orders.orders_id";
-		PreparedStatement myStmt = conn.prepareStatement(query);
-		myStmt.setInt(1, cust_id);
-		ResultSet rs = myStmt.executeQuery();
-
-		Map<Integer, List<String>> groupedOrders = new HashMap<>();
-		Map<Integer, String> orderDates = new HashMap<>();
-		Map<Integer, Float> orderTotalPrice = new HashMap<>();
-
-		Boolean has = false;
-		while (rs.next()) {
-			has = true;
-			int orders_id = rs.getInt("orders_id");
-			String order_created = rs.getString("order_created");
-			String title = rs.getString("title");
-			String ISBN = rs.getString("ISBN");
-			Float price = rs.getFloat("price");
-			Integer quantity = rs.getInt("quantity");
-
-			String details = title + " - ISBN: " + ISBN + " - Quantity: " + quantity;
-
-			orderDates.put(orders_id, order_created);
-
-			if (orderTotalPrice.containsKey(orders_id)) {
-				orderTotalPrice.put(orders_id, orderTotalPrice.get(orders_id) + (price * quantity));
-			} else {
-				orderTotalPrice.put(orders_id, price * quantity);
-			}
-
-			if (groupedOrders.containsKey(orders_id)) {
-				groupedOrders.get(orders_id).add(details);
-			} else {
-				List<String> orderDetails = new ArrayList<>();
-				orderDetails.add(details);
-				groupedOrders.put(orders_id, orderDetails);
-			}
-		}
-		%>
-
 		<div class="mt-5">
 			<h2>
 				<u><b>CUSTOMER ORDERS</b></u>
@@ -184,13 +141,38 @@
 							</thead>
 							<tbody>
 								<%
-								for (Map.Entry<Integer, List<String>> entry : groupedOrders.entrySet()) {
-									int orderId = entry.getKey();
-									List<String> orderDetails = entry.getValue();
+								ArrayList<Order> orders = new CustomerDAO().getCustomerOrders(customer.getCust_id());
+
+								ArrayList<ArrayList<Order>> groupedOrders = new ArrayList<>();
+
+								// Group orders by ID
+								for (Order order : orders) {
+									boolean isNewGroup = true;
+
+									// Check if there is an existing group with the same ID
+									for (ArrayList<Order> group : groupedOrders) {
+										if (group.get(0).getOrders_id() == order.getOrders_id()) {
+									group.add(order);
+									isNewGroup = false;
+									break;
+										}
+									}
+
+									// If no existing group found, create a new group
+									if (isNewGroup) {
+										ArrayList<Order> newGroup = new ArrayList<>();
+										newGroup.add(order);
+										groupedOrders.add(newGroup);
+									}
+								}
+
+								Boolean has = false;
+								for (ArrayList<Order> groupedOrder : groupedOrders) {
+									has = true;
 								%>
 								<tr>
 									<%
-									String orderDateStr = orderDates.get(orderId);
+									String orderDateStr = groupedOrder.get(0).getOrder_date();
 									SimpleDateFormat sdfSql = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 									Date orderDate = sdfSql.parse(orderDateStr);
 
@@ -200,15 +182,15 @@
 									<td><%=formattedOrderDate%></td>
 									<td>
 										<%
-										for (String details : orderDetails) {
+										for (Order order : groupedOrder) {
 										%>
 										<div class="d-flex align-items-center mb-2">
-											<p class="mb-1"><%=details%></p>
+											<p class="mb-1"><%=order.getTitle() + " - ISBN: " + order.getISBN() + " - Quantity: " + order.getQuantity()%></p>
 										</div> <%
  }
  %>
 									</td>
-									<td>$<%=String.format("%.2f", orderTotalPrice.get(orderId))%></td>
+									<td>$<%=String.format("%.2f", groupedOrder.get(0).getTotal_price())%></td>
 								</tr>
 								<%
 								}

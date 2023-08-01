@@ -149,7 +149,7 @@
 										<div class="d-flex justify-content-between mb-5">
 											<h5 class="text-uppercase">Total price</h5>
 											<h5>
-												$ <span id="totalPrice"><%=decimalFormat.format(total_price)%></span>
+												$ <span id="totalPrice"><%=Math.round(total_price * 100.0) / 100.0%></span>
 											</h5>
 										</div>
 
@@ -157,14 +157,23 @@
 										<div class="d-flex justify-content-between mb-5">
 											<h5 class="text-uppercase">Amount Payable - after GST</h5>
 											<h5>
-												$ <span id="totalPrice"><%=decimalFormat.format(Math.round(total_price + total_price * 0.08))%></span>
+												$ <span id="totalPrice"><%=Math.round((total_price * 1.08) * 100.0) / 100.0%></span>
 											</h5>
 										</div>
 										<%
 										session.setAttribute("checkout", cartItems);
+										session.setAttribute("total", Math.round((total_price * 1.08) * 100.0) / 100.0);
 										}
 										%>
-
+										<form action="/JAD_CA2/authorize_payment" method="POST">
+											<input type="hidden" name="subtotal" value="<%=Math.round(total_price * 100.0) / 100.0%>" />
+											<input type="hidden" name="total"
+												value="<%=Math.round((total_price * 1.08) * 100.0) / 100.0%>" />
+											<input type="hidden" name="tax"
+												value="<%=Math.round((total_price * 0.08) * 100.0) / 100.0%>" />
+											<button type="submit" class="btn btn-primary">Proceed
+												to payment</button>
+										</form>
 										<div id="paypal-button-container"></div>
 									</div>
 								</div>
