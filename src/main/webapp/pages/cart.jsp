@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>BookStore</title>
+<title>BokStore</title>
 </head>
 <body>
 	<%@ page import="classes.Cart"%>
@@ -18,9 +18,11 @@
 	DecimalFormat decimalFormat = new DecimalFormat("#.00");
 	ArrayList<Cart> cartItems = new ArrayList<Cart>();
 	float totalPrice = 0;
+	float amountSaved = 0;
 	boolean has = false;
 	String code = request.getParameter("code");
 	String message = "";
+	int cust_id = customer.getCust_id();
 	if (code != null) {
 		if (code.equals("success")) {
 			message = "Added to cart!";
@@ -30,8 +32,6 @@
 			message = "Successfully checked out!";
 		}
 	}
-
-	int cust_id = customer.getCust_id();
 
 	if (!customer.isAuthenticated()) {
 		response.sendRedirect("/JAD_CA2/pages/custLogin.jsp");
@@ -79,6 +79,7 @@
 										}
 										for (Cart cartItem : cartItems) {
 										totalPrice = cartItem.getTotal_price();
+										amountSaved = cartItem.getAmountSaved();
 										has = true;
 										%>
 
@@ -90,6 +91,7 @@
 											<div class="col-md-4">
 												<h6 class="text-muted"><%=cartItem.getCategory()%></h6>
 												<h6 class="text-black mb-0"><%=cartItem.getTitle()%></h6>
+
 											</div>
 											<div
 												class="col-md-3 d-flex justify-content-end align-items-center">
@@ -107,17 +109,32 @@
 															value="+">
 													</form>
 												</div>
+
+
 											</div>
 											<div
 												class="col-md-3 d-flex justify-content-end align-items-center">
-												<h6 class="mb-0"></h6>
-												<a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+												<h6 class="mb-0">
+													<%
+													if (cartItem.getDiscountAmt() == 0) {
+													%>
+													$<%=cartItem.getTotalAmt()%>
+													<%
+													} else {
+													%>
+													<s class="mr-2">$<%=cartItem.getTotalAmt()%></s>$<%=cartItem.getDiscountAmt()%>
+													<%
+													}
+													%>
+												</h6>
 												<form action="/JAD_CA2/deleteCart">
 													<input type="hidden" name="book_id"
 														value="<%=cartItem.getBook_id()%>"> <input
 														type="hidden" name="cust_id" value="<%=cust_id%>">
-													<input type="submit" name="delete" value="X"
+													<input type="submit" name="delete" value="x"
 														class="btn m-2">
+
+
 												</form>
 
 											</div>
@@ -145,14 +162,31 @@
 										<h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
 										<hr class="my-4">
 
-										<div class="d-flex justify-content-between mb-5">
-											<h5 class="text-uppercase">Total price</h5>
+										<div class="d-flex flex-column justify-content-between mb-5">
+											<h5 class="text-uppercase">Original Total price:</h5>
 											<h5>
 												<%
 												String formattedAmount = decimalFormat.format(totalPrice);
 												%>
 												$ <span id="totalPrice"><%=formattedAmount%></span>
 											</h5>
+											<br>
+											<h5 class="text-uppercase">Amount saved:</h5>
+											<h5>
+												<%
+												String formattedSavedAmount = decimalFormat.format(amountSaved);
+												%>
+												$ <span id="totalPrice"><%=formattedSavedAmount%></span>
+											</h5>
+											<br>
+											<hr>
+											<h5 class="text-uppercase">
+												Total Payable:
+												<h5>
+													<%
+													String formattedTotalPayable = decimalFormat.format(totalPrice - amountSaved);
+													%>
+													$ <span id="totalPrice"><%=formattedTotalPayable%></span>
 										</div>
 
 										<a class="btn btn-primary"
@@ -175,7 +209,7 @@
 	</section>
 	<%
 	} catch (NullPointerException e) {
-	response.sendRedirect(request.getContextPath() + "/loadCart?cust_id=" + cust_id);
+	response.sendRedirect(request.getContextPath() + "/loadCart");
 	} catch (Exception e) {
 	response.sendRedirect(request.getContextPath() + "/loadBooks");
 	}

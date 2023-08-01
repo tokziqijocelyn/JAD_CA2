@@ -65,7 +65,7 @@
 										<%
 										} else {
 										for (Cart cartItem : cartItems) {
-											total_price = cartItem.getTotal_price();
+											total_price = cartItem.getTotal_price() - cartItem.getAmountSaved();
 										%>
 										<div class="row mb-4">
 											<div class="col-md-2 col-lg-2 col-xl-2">
@@ -86,9 +86,22 @@
 											</div>
 											<div
 												class="col-md-3 d-flex justify-content-end align-items-center">
+
+												<%
+												if (cartItem.getDiscountAmt() == 0) {
+												%>
 												<h6 class="mb-0">
 													$ <span><%=decimalFormat.format(cartItem.getTotalAmt())%></span>
 												</h6>
+												<%
+												} else {
+												%>
+												<h6 class="mb-0">
+													$ <span><%=decimalFormat.format(cartItem.getDiscountAmt())%></span>
+												</h6>
+												<%
+												}
+												%>
 											</div>
 										</div>
 										<hr class="my-4">

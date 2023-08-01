@@ -23,13 +23,14 @@ public class CartDAO {
 		ArrayList<Cart> cartItems = new ArrayList<Cart>();
 		
 		Connection conn = Database.connect();
-		String bookQuery = "SELECT books.title, ROUND(books.price, 2) AS price, ROUND(books.price * SUM(cart.quantity), 2) AS amount, book_category.category_name AS category, SUM(cart.quantity) AS quantity, books.image, books.quantity AS totalqty, books.book_id, ROUND((SELECT SUM(books.price * cart.quantity) FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN cart ON cart.book_id = books.book_id WHERE cart.cust_id = ?), 2) AS total_price FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN cart ON cart.book_id = books.book_id WHERE cart.cust_id = ? GROUP BY books.book_id;";
+		String bookQuery = "SELECT books.title, ROUND(books.price, 2) AS price, IFNULL(ROUND(books.price * SUM(cart.quantity), 2), 0) AS original_amount, IFNULL(ROUND((1-seasonal_promotions.percentage_off) * books.price * SUM(cart.quantity), 2), 0) AS discounted_amount, book_category.category_name AS category, SUM(cart.quantity) AS quantity, books.image, books.quantity AS totalqty, books.book_id, ROUND((SELECT SUM(books.price * cart.quantity) FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN cart ON cart.book_id = books.book_id WHERE cart.cust_id = ?), 2) AS total_price, IFNULL((SELECT ROUND(SUM(books.price * cart.quantity * seasonal_promotions.percentage_off), 2) FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN cart ON cart.book_id = books.book_id JOIN book_promotions ON book_promotions.book_id = books.book_id JOIN seasonal_promotions ON seasonal_promotions.promotion_id = book_promotions.promotion_id WHERE cart.cust_id = ?), 0) AS amountSaved FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN cart ON cart.book_id = books.book_id LEFT JOIN book_promotions ON book_promotions.book_id = books.book_id LEFT JOIN seasonal_promotions ON seasonal_promotions.promotion_id = book_promotions.promotion_id WHERE cart.cust_id = ? GROUP BY books.book_id;";
 		
 		try {
 			
 			PreparedStatement myStmt = conn.prepareStatement(bookQuery);
 			myStmt.setInt(1, cust_id);
 			myStmt.setInt(2, cust_id);
+			myStmt.setInt(3, cust_id);
 			ResultSet rs = myStmt.executeQuery();
 			
 			while(rs.next()) {
@@ -38,16 +39,18 @@ public class CartDAO {
 				
 				String title = rs.getString("title");
 				Float price = rs.getFloat("price");
-				Float amount = rs.getFloat("amount");
-				
+				Float amount = rs.getFloat("original_amount");
+				Float discountedAmount = rs.getFloat("discounted_amount");
 				String category = rs.getString("category");
 				int quantity  = rs.getInt("quantity");
 				String img = rs.getString("image");
 				int inventoryLeft = rs.getInt("totalqty");
 				int book_id = rs.getInt("book_id");;
-				float totalPrice = rs.getFloat("total_price");;
+				float totalPrice = rs.getFloat("total_price");
+				float amountSaved = rs.getFloat("amountSaved");
+				
 				totalPrice = Float.parseFloat(decimalFormat.format(totalPrice));
-				cartItems.add(new Cart(title, price, amount, category, quantity, img, inventoryLeft, book_id, totalPrice));
+				cartItems.add(new Cart(title, price, amount, discountedAmount, category, quantity, img, inventoryLeft, book_id, totalPrice, amountSaved));
 			}
 		
 					

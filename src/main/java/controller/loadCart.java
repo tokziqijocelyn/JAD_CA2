@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import classes.Cart;
 import models.CartDAO;
@@ -35,15 +36,16 @@ public class loadCart extends HttpServlet {
 		
 		ArrayList<Cart> cartItems = null;
 		
-		int cust_id = Integer.parseInt(request.getParameter("cust_id"));
+		HttpSession session = request.getSession();
+		int cust_id = (int) session.getAttribute("cust_id");
 		
 		try {
 			
 			cartItems = new CartDAO().getCartItems(cust_id);
 			
 			
-		} catch (Exception e) {
-			
+		} catch (NullPointerException e) {
+			request.getRequestDispatcher("/pages/home.jsp").forward(request, response);
 		}
 		request.setAttribute("cartItems", cartItems);
 		request.getRequestDispatcher("/pages/cart.jsp").forward(request, response);

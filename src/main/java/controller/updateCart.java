@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import models.CartDAO;
 
@@ -34,7 +35,9 @@ public class updateCart extends HttpServlet {
 		boolean success = false;
 		String arith = request.getParameter("arith");
 		int qty = Integer.parseInt(request.getParameter("qty"));
-		int cust_id = Integer.parseInt(request.getParameter("cust_id"));
+		
+		HttpSession session = request.getSession();
+		int cust_id = (int) session.getAttribute("cust_id");
 		int book_id = Integer.parseInt(request.getParameter("book_id"));
 		
 		success = new CartDAO().updateCart(cust_id, book_id, qty, arith);

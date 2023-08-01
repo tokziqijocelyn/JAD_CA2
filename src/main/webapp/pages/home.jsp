@@ -24,8 +24,7 @@
 	<%@page import='java.util.ArrayList'%>
 	<%@include file="../custNav.jsp"%>
 
-
-	<%
+	<%	
 	String categoryId = request.getParameter("category");
 	String publisherId = request.getParameter("publisher");
 	int category_id;
@@ -113,7 +112,10 @@
 			</div>
 
 			<div id="results" class="col-8 ml-5">
+<<<<<<< HEAD
 
+=======
+>>>>>>> branch 'master' of https://github.com/tokziqijocelyn/JAD_CA2.git
 				<%@include file="promotions.jsp"%>
 				<%
 				Boolean hasBooks = false;

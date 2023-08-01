@@ -15,10 +15,14 @@ public class PromoDAO {
 
 		try {
 			LocalDate today = LocalDate.now();
-			int promotion_id = today.getDayOfWeek().getValue();
+
+		    int day = today.getDayOfWeek().getValue();
+		    if (day == 7) {
+		        day = 0; 
+		    }
 
 			PreparedStatement myStmt = conn.prepareStatement(query);
-			myStmt.setInt(1, promotion_id);
+			myStmt.setInt(1, day);
 			ResultSet rs = myStmt.executeQuery();
 			
 			if (rs.next()) {
