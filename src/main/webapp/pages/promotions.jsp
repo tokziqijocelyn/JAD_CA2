@@ -61,6 +61,21 @@
 		if (promo.getNoOfBooks() > 0) {
 	%>
 	
+	<style>
+	
+	.active.carousel-item-start { 
+	display: none !important;
+	
+	}
+	
+	.active.carousel-item-ends { 
+	display: none !important;
+	
+	}
+	
+	 </style>
+	
+	
 	
 
 	<div class="banner m-5 mr-5 d-flex justify-content-evenly"
@@ -120,6 +135,7 @@
 					Float price = book.getPrice();
 					Float discount_price = book.getDiscount_price();
 				%>
+	
 
 				<div class="carousel-item p-5" data-bs-interval="2000"
 					style="width: 550px; height: 350px; margin-right: 250px;">
@@ -204,7 +220,6 @@
 	<div class="banner m-5 mr-5 ">
 						<h1>ALIWDJUHKAWUDYHUAWHD</h1>
 						<h1>Day <%=day %></h1>
->>>>>>> branch 'master' of https://github.com/tokziqijocelyn/JAD_CA2.git
 		<div class="d-flex justify-content-evenly ">
 			<img alt=""
 				src="<%=(request.getContextPath() + "/images/noPromo.png")%>"
