@@ -218,8 +218,6 @@
 	%>
 
 	<div class="banner m-5 mr-5 ">
-						<h1>ALIWDJUHKAWUDYHUAWHD</h1>
-						<h1>Day <%=day %></h1>
 		<div class="d-flex justify-content-evenly ">
 			<img alt=""
 				src="<%=(request.getContextPath() + "/images/noPromo.png")%>"
