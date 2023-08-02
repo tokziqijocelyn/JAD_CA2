@@ -24,8 +24,8 @@ public class CartDAO {
 		
 		Connection conn = Database.connect();
 		String bookQuery = "SELECT image, title, price, original_amount, promotion_id, discounted_amount, category, quantity, totalqty, book_id, total_price, amountSaved FROM (SELECT image, title, price, original_amount, promotion_id, discounted_amount, category, quantity, totalqty, book_id, total_price, amountSaved, ROW_NUMBER() OVER (PARTITION BY book_id ORDER BY discounted_amount) AS rn FROM (SELECT allCartBooks.image, allCartBooks.title, allCartBooks.price, allCartBooks.total AS original_amount, allCartBooks.promotion_id, CASE WHEN allCartBooks.promotion_id = ? THEN ROUND(((1 - allCartBooks.percentage_off) * allCartBooks.total), 2) ELSE allCartBooks.total END AS discounted_amount, allCartBooks.category, allCartBooks.quantity, allCartBooks.totalqty, allCartBooks.book_id, allCartBooks.total_price, ROUND(SUM(allCartBooks.percentage_off * allCartBooks.total) OVER (), 2) AS amountSaved FROM (SELECT books.book_id, books.title, books.price, books.image, book_category.category_name AS category, cart.quantity, ROUND((cart.quantity * books.price), 2) AS total, book_promotions.promotion_id, IFNULL(seasonal_promotions.percentage_off, 0) AS percentage_off, books.quantity AS totalqty, ROUND( (SELECT SUM(books.price * cart.quantity) FROM books JOIN book_category ON books.book_category_id = book_category.category_id JOIN cart ON cart.book_id = books.book_id WHERE cart.cust_id = ? ), 2 ) AS total_price FROM cart JOIN books ON books.book_id = cart.book_id JOIN book_category ON book_category.category_id = books.book_category_id LEFT JOIN book_promotions ON book_promotions.book_id = books.book_id LEFT JOIN seasonal_promotions ON seasonal_promotions.promotion_id = book_promotions.promotion_id WHERE cart.cust_id = ? ) AS allCartBooks ) AS groupedCartBooks ) AS finalCartBooks WHERE rn = 1;";
-		System.out.println("This is the day : "+ day);
-		
+
+		float amountSaved = 0;
 		try {
 			
 			PreparedStatement myStmt = conn.prepareStatement(bookQuery);
@@ -48,7 +48,7 @@ public class CartDAO {
 				int inventoryLeft = rs.getInt("totalqty");
 				int book_id = rs.getInt("book_id");;
 				float totalPrice = rs.getFloat("total_price");
-				float amountSaved = rs.getFloat("amountSaved");
+				amountSaved = amountSaved + rs.getFloat("discounted_amount");
 				
 				totalPrice = Float.parseFloat(decimalFormat.format(totalPrice));
 				cartItems.add(new Cart(title, price, amount, discountedAmount, category, quantity, img, inventoryLeft, book_id, totalPrice, amountSaved));

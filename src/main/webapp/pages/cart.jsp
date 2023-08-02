@@ -115,9 +115,8 @@
 											<div
 												class="col-md-3 d-flex justify-content-end align-items-center">
 												<h6 class="mb-0">
-												
+
 													<%
-													
 													if (cartItem.getDiscountAmt() == cartItem.getTotalAmt()) {
 													%>
 													$<%=cartItem.getTotalAmt()%>
@@ -175,6 +174,13 @@
 											<br>
 											<h5 class="text-uppercase">Amount saved:</h5>
 											<h5>
+
+												$ <span id="totalPrice"><%=totalPrice - amountSaved%></span>
+											</h5>
+											<br>
+											<hr>
+											<h5 class="text-uppercase">Amount after discount:</h5>
+											<h5>
 												<%
 												String formattedSavedAmount = decimalFormat.format(amountSaved);
 												%>
@@ -182,17 +188,10 @@
 											</h5>
 											<br>
 											<hr>
-											<h5 class="text-uppercase">
-												Total Payable:
-												<h5>
-													<%
-													String formattedTotalPayable = decimalFormat.format(totalPrice - amountSaved);
-													%>
-													$ <span id="totalPrice"><%=formattedTotalPayable%></span>
 										</div>
 
-										<btn class="btn btn-primary"
-											onclick="refreshAndRedirect()">Proceed to checkout</btn>
+										<a class="btn btn-primary" href="http://localhost:8080/JAD_CA2/pages/checkout.jsp">Proceed
+										to checkout</a>
 
 									</div>
 									<%
@@ -205,12 +204,7 @@
 				</div>
 			</div>
 		</div>
-		<script>
-			function refreshAndRedirect() {
-				window.location.reload()
-				window.location.href = 'http://localhost:8080/JAD_CA2/pages/checkout.jsp';
-			}
-		</script>
+
 	</section>
 	<%
 	} catch (NullPointerException e) {

@@ -34,7 +34,7 @@
 	try {
 
 		float total_price = 0;
-		ArrayList<Cart> cartItems = (ArrayList<Cart>) session.getAttribute("cartItems");
+		ArrayList<Cart> cartItems = (ArrayList<Cart>) request.getAttribute("cartItems");
 	%>
 
 	<section class="h-100 h-custom">
@@ -65,7 +65,7 @@
 										<%
 										} else {
 										for (Cart cartItem : cartItems) {
-											total_price = cartItem.getTotal_price() - cartItem.getAmountSaved();
+											total_price = cartItem.getAmountSaved();
 										%>
 										<div class="row mb-4">
 											<div class="col-md-2 col-lg-2 col-xl-2">
@@ -214,7 +214,7 @@
    </script>
 	<%
 	} catch (NullPointerException e) {
-	response.sendRedirect(request.getContextPath() + "/loadCart?cust_id=" + customer_id);
+		response.sendRedirect(request.getContextPath() + "/loadCheckout");
 	} catch (Exception e) {
 	response.sendRedirect(request.getContextPath() + "/loadBooks");
 	}
