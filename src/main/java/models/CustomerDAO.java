@@ -147,6 +147,41 @@ public class CustomerDAO {
 		}
 		return null;
 	}
+	
+	public ArrayList<Customer> getAllCustomersByDate(String sqlStartDate, String sqlEndDate) {
+		Connection conn = Database.connect();
+		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.registered_date BETWEEN ? AND ? ORDER BY customer.registered_date;";
+		PreparedStatement myStmt;
+		try {
+			
+			myStmt = conn.prepareStatement(query);
+			myStmt.setString(1, sqlStartDate);
+			myStmt.setString(2, sqlEndDate);
+			ResultSet rs = myStmt.executeQuery();
+			ArrayList<Customer> customers = new ArrayList<>();
+			while (rs.next()) {
+				customers.add(new Customer(rs.getInt("customer_id"), rs.getString("email"), rs.getString("username"),
+						true, rs.getString("password"), rs.getString("block"), rs.getString("postal_code"),
+						rs.getString("unit_no"), rs.getString("street"), rs.getString("registered_date"),
+						rs.getString("image_url")));
+			}
+			return customers;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	
 
 	public ArrayList<Order> getCustomerOrders(int customer_id) {
 		Connection conn = Database.connect();

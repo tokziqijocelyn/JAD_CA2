@@ -11,6 +11,15 @@
 	<%@page import='classes.*'%>
 	<%@include file="../adminNav.jsp"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript"
+	src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 	<%
 	ArrayList<Customer> customers = (ArrayList<Customer>) request.getAttribute("customers");
 
@@ -40,9 +49,19 @@
 	}
 	%>
 	<div class="container mt-5">
-		<h2>
-			<u><b>View Customers</b></u>
-		</h2>
+
+		<div class="flex justify-content-between m-3">
+			<h2>
+				<u><b>View Customers</b></u>
+			</h2>
+
+			<div>
+				<h5>Find By Register date</h5>
+				<input class="me-5 " id="date" type="text" name="dates" value=' '
+					style="height: 50px; width: 250px" />
+			</div>
+		</div>
+
 		<div class="row">
 			<div class="col-lg-12">
 				<div class="row">
@@ -102,5 +121,34 @@
 			</div>
 		</div>
 	</div>
+
+	<script>
+	$('input[name="dates"]').daterangepicker();
+	let params = new URLSearchParams(window.location.search);
+	let start = params.get('start');
+	let end = params.get('end');
+
+	if (!start && !end) {
+		$("#date").val("");
+	} else {
+		$("#date").val(start + " - " + end);
+	}
+	
+    $("#date").change(() => {
+        var dates = $("#date").val().split(' ');
+        var today_date = convertDate(dates[0]);
+        var last_date = convertDate(dates[2]);
+        window.location.href = "loadCustomers?start=" + today_date + "&end=" + last_date;
+    })
+    
+            function convertDate(date) {
+            var dateArr = date.split('/');
+
+            var newDate = dateArr[0]+ "/" + dateArr[1] + "/" + dateArr[2];
+
+            return newDate;
+        }
+</script>
+
 </body>
 </html>

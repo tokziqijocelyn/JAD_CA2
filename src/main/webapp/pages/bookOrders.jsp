@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+ <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
@@ -70,8 +70,7 @@
 									<strong class="text-secondary">Address:</strong> <span
 										class="ml-2"><%=orderInSameGroup.get(0).getBlock()%>, <%=orderInSameGroup.get(0).getStreet()%>,
 										<%=orderInSameGroup.get(0).getUnit_no()%>, <%=orderInSameGroup.get(0).getPostal_code()%></span>
-								</p>
-								<br />
+								</p> <br />
 								<h4 class="text-secondary my-2">Order:</h4> <%
  for (Order order : orderInSameGroup) {
  %>
