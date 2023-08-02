@@ -13,8 +13,7 @@ public class Cart {
 	private int book_id;
 	private float total_price;
 	private float amountSaved;
-	
-	
+
 	
 	public Cart(String title, float price, float totalAmt, float discountAmt, String category, int quantity, String img,
 			int inventoryLeft, int book_id, float total_price, float amountSaved) {

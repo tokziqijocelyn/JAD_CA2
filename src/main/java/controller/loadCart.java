@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -39,9 +40,14 @@ public class loadCart extends HttpServlet {
 		HttpSession session = request.getSession();
 		int cust_id = (int) session.getAttribute("cust_id");
 		
+	    LocalDate today = LocalDate.now();
+	    int day = today.getDayOfWeek().getValue();
+	    if (day == 7) {
+	        day = 0; 
+	    }
 		try {
 			
-			cartItems = new CartDAO().getCartItems(cust_id);
+			cartItems = new CartDAO().getCartItems(cust_id, day);
 			
 			
 		} catch (NullPointerException e) {

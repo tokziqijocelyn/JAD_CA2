@@ -115,8 +115,10 @@
 											<div
 												class="col-md-3 d-flex justify-content-end align-items-center">
 												<h6 class="mb-0">
+												
 													<%
-													if (cartItem.getDiscountAmt() == 0) {
+													
+													if (cartItem.getDiscountAmt() == cartItem.getTotalAmt()) {
 													%>
 													$<%=cartItem.getTotalAmt()%>
 													<%
@@ -189,10 +191,8 @@
 													$ <span id="totalPrice"><%=formattedTotalPayable%></span>
 										</div>
 
-										<a class="btn btn-primary"
-											href="http://localhost:8080/JAD_CA2/pages/checkout.jsp">Proceed
-											to checkout</a>
-
+										<btn class="btn btn-primary"
+											onclick="refreshAndRedirect()">Proceed to checkout</btn>
 
 									</div>
 									<%
@@ -205,7 +205,12 @@
 				</div>
 			</div>
 		</div>
-
+		<script>
+			function refreshAndRedirect() {
+				window.location.reload()
+				window.location.href = 'http://localhost:8080/JAD_CA2/pages/checkout.jsp';
+			}
+		</script>
 	</section>
 	<%
 	} catch (NullPointerException e) {

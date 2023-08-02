@@ -72,7 +72,7 @@
 							New Season Name: <br> <input type="text" name="name"
 								required class="form-control"> <br> New Discount
 							Percentage: [eg 50 = 50%]<br> <input type="number"
-								class="form-control" name="percentage" max=90 required>%
+								class="form-control" name="percentage" min=10 max=90 required>%
 						</div>
 
 						<input type="submit" class="btn btn-primary" value="Edit">
