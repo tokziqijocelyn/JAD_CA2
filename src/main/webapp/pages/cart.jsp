@@ -174,8 +174,10 @@
 											<br>
 											<h5 class="text-uppercase">Amount saved:</h5>
 											<h5>
-
-												$ <span id="totalPrice"><%=totalPrice - amountSaved%></span>
+												<%
+												String formattedAmountSaved = decimalFormat.format(totalPrice - amountSaved);
+												%>
+												$ <span id="totalPrice"><%=formattedAmountSaved%></span>
 											</h5>
 											<br>
 											<hr>
@@ -190,8 +192,9 @@
 											<hr>
 										</div>
 
-										<a class="btn btn-primary" href="http://localhost:8080/JAD_CA2/pages/checkout.jsp">Proceed
-										to checkout</a>
+										<a class="btn btn-primary"
+											href="http://localhost:8080/JAD_CA2/pages/checkout.jsp">Proceed
+											to checkout</a>
 
 									</div>
 									<%

@@ -12,14 +12,14 @@
 	<%@include file="../adminNav.jsp"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<script type="text/javascript"
-	src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script type="text/javascript"
-	src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript"
-	src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+	<script type="text/javascript"
+		src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript"
+		src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css"
+		href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 	<%
 	ArrayList<Customer> customers = (ArrayList<Customer>) request.getAttribute("customers");
 
@@ -55,10 +55,18 @@
 				<u><b>View Customers</b></u>
 			</h2>
 
-			<div>
-				<h5>Find By Register date</h5>
-				<input class="me-5 " id="date" type="text" name="dates" value=' '
-					style="height: 50px; width: 250px" />
+			<div class="flex">
+				<div class="flex-1">
+					<h5>Find By Register date</h5>
+					<input class="me-5 " id="date" type="text" name="dates" value=' '
+						style="height: 50px; width: 250px" />
+				</div>
+				<div class="flex-1">
+					<h5>Find by postal code</h5>
+					<form action="loadCustomers">
+						<input type="text" name="postal">
+					</form>
+				</div>
 			</div>
 		</div>
 

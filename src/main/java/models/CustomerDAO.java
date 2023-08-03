@@ -53,7 +53,7 @@ public class CustomerDAO {
 		System.out.print("CUST ID RIGHT NOW!!!!" + cust_id);
 		if (cust_id == null) {
 			return new Customer(false);
-		} 
+		}
 		Connection conn = Database.connect();
 		String userQuery = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.customer_id=?";
 		PreparedStatement myStmt;
@@ -99,11 +99,10 @@ public class CustomerDAO {
 				return -1;
 			} else {
 				Integer cust_id = rs.getInt("customer_id");
-				System.out.println("THIS IS THE CUST ID"+cust_id);
+				System.out.println("THIS IS THE CUST ID" + cust_id);
 				return cust_id;
 			}
-			
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -147,13 +146,45 @@ public class CustomerDAO {
 		}
 		return null;
 	}
-	
+
+	public ArrayList<Customer> getAllCustomersByPostal(String postal) {
+		Connection conn = Database.connect();
+		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.reseller = 0 AND customer_address.postal_code LIKE ?";
+
+		try {
+			PreparedStatement myStmt;
+			myStmt = conn.prepareStatement(query);
+			myStmt.setString(1, "%" + postal + "%");
+			ResultSet rs = myStmt.executeQuery();
+			ArrayList<Customer> customers = new ArrayList<>();
+			while (rs.next()) {
+				customers.add(new Customer(rs.getInt("customer_id"), rs.getString("email"), rs.getString("username"),
+						true, rs.getString("password"), rs.getString("block"), rs.getString("postal_code"),
+						rs.getString("unit_no"), rs.getString("street"), rs.getString("registered_date"),
+						rs.getString("image_url")));
+			}
+			return customers;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	public ArrayList<Customer> getAllCustomersByDate(String sqlStartDate, String sqlEndDate) {
 		Connection conn = Database.connect();
 		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.registered_date BETWEEN ? AND ? AND customer.reseller = 0 ORDER BY customer.registered_date;";
 		PreparedStatement myStmt;
 		try {
-			
+
 			myStmt = conn.prepareStatement(query);
 			myStmt.setString(1, sqlStartDate);
 			myStmt.setString(2, sqlEndDate);
@@ -180,8 +211,6 @@ public class CustomerDAO {
 		}
 		return null;
 	}
-	
-	
 
 	public ArrayList<Order> getCustomerOrders(int customer_id) {
 		Connection conn = Database.connect();
@@ -246,7 +275,7 @@ public class CustomerDAO {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Customer> getTopCustomersWeek() {
 		Connection conn = Database.connect();
 		String query = "SELECT c.username, SUM(o.total_price) AS amount_spent FROM orders o JOIN customer c ON c.customer_id = o.customer_id WHERE YEARWEEK(o.order_created) = YEARWEEK(CURDATE()) GROUP BY o.customer_id ORDER BY amount_spent DESC LIMIT 10";
@@ -275,7 +304,7 @@ public class CustomerDAO {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<Customer> getTopCustomersMonth() {
 		Connection conn = Database.connect();
 		String query = "SELECT c.username, SUM(o.total_price) AS amount_spent FROM orders o JOIN customer c ON c.customer_id = o.customer_id WHERE EXTRACT(YEAR_MONTH FROM o.order_created) = EXTRACT(YEAR_MONTH FROM CURDATE()) GROUP BY o.customer_id ORDER BY amount_spent DESC LIMIT 10";
@@ -304,11 +333,12 @@ public class CustomerDAO {
 		}
 		return null;
 	}
-	
-	public boolean updateCustomerByID(String imagePath, String username, String email, String pwd, String block, String street, String unit, int postal, Integer cust_id) {
+
+	public boolean updateCustomerByID(String imagePath, String username, String email, String pwd, String block,
+			String street, String unit, int postal, Integer cust_id) {
 		boolean success = false;
-	    Connection conn = Database.connect();
-	    System.out.println("Update customer in customerdao ran");
+		Connection conn = Database.connect();
+		System.out.println("Update customer in customerdao ran");
 		String query = "UPDATE customer SET username = ?, email = ?, password = ?, image_url = ? WHERE customer_id = ?";
 		String query_address = "UPDATE customer_address SET block = ?, street = ?, unit_no = ?, postal_code = ? WHERE customer_id = ?";
 		try {
@@ -327,13 +357,12 @@ public class CustomerDAO {
 			myStmt.executeUpdate();
 			myStmt_address.executeUpdate();
 			success = true;
-	    } catch (NullPointerException e) {
-	        System.out.println("NULL ERROR IN CUSTDAO 2");
-	    } catch (Exception e) {
-	        System.out.println("VAGUE ERROR! 2!!");
-	        System.out.println(e);
-	    }
-	    finally {
+		} catch (NullPointerException e) {
+			System.out.println("NULL ERROR IN CUSTDAO 2");
+		} catch (Exception e) {
+			System.out.println("VAGUE ERROR! 2!!");
+			System.out.println(e);
+		} finally {
 			try {
 				conn.close();
 			} catch (SQLException e) {
@@ -341,20 +370,20 @@ public class CustomerDAO {
 				e.printStackTrace();
 			}
 		}
-	    
-	    return success;
+
+		return success;
 	}
-	
+
 	public int deleteCustomerByID(int cust_id) {
 		int success = 0;
 		Connection conn = Database.connect();
 		String query = "DELETE FROM customer WHERE customer_id= ?";
-		
+
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setInt(1, cust_id);
 			success = myStmt.executeUpdate();
-			
+
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
@@ -365,53 +394,53 @@ public class CustomerDAO {
 				e.printStackTrace();
 			}
 		}
-		
-		
+
 		return success;
 	}
-	
-	public String addCustomer(String imagePath, String username, String email, String pwd, String block, String street, String unit, int postal, Integer cust_id) {
+
+	public String addCustomer(String imagePath, String username, String email, String pwd, String block, String street,
+			String unit, int postal, Integer cust_id) {
 		String success = "error";
 		Connection conn = Database.connect();
 		String query = "INSERT INTO customer (username, email, password, image_url) VALUES (?,?,?,?);";
 		String addQuery = "INSERT INTO customer_address (customer_id, block, postal_code, unit_no, street) VALUES (?,?,?,?,?);";
-		
+
 		try {
-            PreparedStatement orderStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-            orderStmt.setString(1, username);
-            orderStmt.setString(2, email);
-            orderStmt.setString(3, pwd);
-            orderStmt.setString(4, imagePath);
-            orderStmt.executeUpdate();
+			PreparedStatement orderStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			orderStmt.setString(1, username);
+			orderStmt.setString(2, email);
+			orderStmt.setString(3, pwd);
+			orderStmt.setString(4, imagePath);
+			orderStmt.executeUpdate();
 
-            int insertedId = 0;
+			int insertedId = 0;
 
-            ResultSet generatedKeys = orderStmt.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                insertedId = generatedKeys.getInt(1);
-                System.out.println("Inserted ID: " + insertedId);
-            } else {
-                System.out.println("Failed to retrieve inserted ID.");
-                throw new Error("Failed to retrieve inserted ID.");
-            }
+			ResultSet generatedKeys = orderStmt.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				insertedId = generatedKeys.getInt(1);
+				System.out.println("Inserted ID: " + insertedId);
+			} else {
+				System.out.println("Failed to retrieve inserted ID.");
+				throw new Error("Failed to retrieve inserted ID.");
+			}
 
-            PreparedStatement addStmt = conn.prepareStatement(addQuery);
-            addStmt.setInt(1, insertedId);
-            addStmt.setString(2, block);
-            addStmt.setInt(3, postal);
-            addStmt.setString(4, unit);
-            addStmt.setString(5, street);
-            addStmt.executeUpdate();
-            
-            success = "success";
-		}catch (SQLIntegrityConstraintViolationException e) {
-            success = "duplicate";
-        } catch (Exception e) {
-            System.out.print(e);
-            success = "error";
-        }
-		
+			PreparedStatement addStmt = conn.prepareStatement(addQuery);
+			addStmt.setInt(1, insertedId);
+			addStmt.setString(2, block);
+			addStmt.setInt(3, postal);
+			addStmt.setString(4, unit);
+			addStmt.setString(5, street);
+			addStmt.executeUpdate();
+
+			success = "success";
+		} catch (SQLIntegrityConstraintViolationException e) {
+			success = "duplicate";
+		} catch (Exception e) {
+			System.out.print(e);
+			success = "error";
+		}
+
 		return success;
 	}
-	
+
 }
