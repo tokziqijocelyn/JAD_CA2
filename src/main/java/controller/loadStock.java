@@ -32,6 +32,16 @@ public class loadStock extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		BookDAO bookDAO = new BookDAO();
+		String search = request.getParameter("search");
+		ArrayList<Book> custom_stock = new ArrayList<>(); 
+		if (search != null) {
+			int stock = Integer.parseInt(search);
+			custom_stock = bookDAO.getBookStockBySearch(stock);
+		} else {
+			custom_stock = bookDAO.getAllBooksStock();
+			System.out.print("This is the customer stock"+custom_stock);
+		}
+
 		ArrayList<Book> no_stock = bookDAO.getNoStockBooks();
 		ArrayList<Book> low_stock = bookDAO.getLowStockBooks();
 		ArrayList<Book> high_stock = bookDAO.getHighStockBooks();
@@ -39,6 +49,7 @@ public class loadStock extends HttpServlet {
 		request.setAttribute("no_stock", no_stock);
 		request.setAttribute("low_stock", low_stock);
 		request.setAttribute("high_stock", high_stock);
+		request.setAttribute("custom_stock", custom_stock);
 		request.getRequestDispatcher("/pages/stocks.jsp").forward(request, response);
 	}
 
