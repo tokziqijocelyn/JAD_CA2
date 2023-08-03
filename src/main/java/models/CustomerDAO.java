@@ -88,7 +88,7 @@ public class CustomerDAO {
 
 	public int loginCustomer(String email, String password) {
 		Connection conn = Database.connect();
-		String query = "SELECT customer_id FROM customer WHERE email = ? and password = ?";
+		String query = "SELECT customer_id FROM customer WHERE email = ? and password = ? and reseller = 0";
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			myStmt.setString(1, email);
@@ -120,7 +120,7 @@ public class CustomerDAO {
 
 	public ArrayList<Customer> getAllCustomers() {
 		Connection conn = Database.connect();
-		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id";
+		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.reseller = 0";
 		PreparedStatement myStmt;
 		try {
 			myStmt = conn.prepareStatement(query);
@@ -150,7 +150,7 @@ public class CustomerDAO {
 	
 	public ArrayList<Customer> getAllCustomersByDate(String sqlStartDate, String sqlEndDate) {
 		Connection conn = Database.connect();
-		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.registered_date BETWEEN ? AND ? ORDER BY customer.registered_date;";
+		String query = "SELECT customer.customer_id, customer.username, customer.email, customer.password, customer_address.block, customer_address.postal_code, customer_address.unit_no, customer_address.street, customer.registered_date, customer.image_url FROM customer JOIN customer_address ON customer.customer_id = customer_address.customer_id WHERE customer.registered_date BETWEEN ? AND ? AND customer.reseller = 0 ORDER BY customer.registered_date;";
 		PreparedStatement myStmt;
 		try {
 			

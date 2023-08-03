@@ -16,9 +16,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page import="java.text.DecimalFormat"%>
 
-<script
-	src="https://www.paypal.com/sdk/js?client-id=AWinJf8GPVRc95mbJYzyGOkHw2dOScgpucRq2e05nxk6mc4JUKCAn3y0WUs9AdFhs1-sR4sG-ukDPvHF&currency=SGD"></script>
-
 <body>
 
 	<%
@@ -166,15 +163,15 @@
 										}
 										%>
 										<form action="/JAD_CA2/authorize_payment" method="POST">
-											<input type="hidden" name="subtotal" value="<%=Math.round(total_price * 100.0) / 100.0%>" />
-											<input type="hidden" name="total"
+											<input type="hidden" name="subtotal"
+												value="<%=Math.round(total_price * 100.0) / 100.0%>" /> <input
+												type="hidden" name="total"
 												value="<%=Math.round((total_price * 1.08) * 100.0) / 100.0%>" />
 											<input type="hidden" name="tax"
 												value="<%=Math.round((total_price * 0.08) * 100.0) / 100.0%>" />
 											<button type="submit" class="btn btn-primary">Proceed
 												to payment</button>
 										</form>
-										<div id="paypal-button-container"></div>
 									</div>
 								</div>
 							</div>
@@ -184,37 +181,9 @@
 			</div>
 		</div>
 	</section>
-	<script>
-     paypal.Buttons({
-       // Sets up the transaction when a payment button is clicked
-       createOrder: (data, actions) => {
-         return actions.order.create({
-           purchase_units: [{
-             amount: {
-               value: <%=Math.round(total_price + total_price * 0.08)%> 
-             }
-           }]
-         });
-       },
-       // Finalize the transaction after payer approval
-       onApprove: (data, actions) => {
-         return actions.order.capture().then(function(orderData) {
-
-        	  // Assuming customer_id and total_price are already defined in your JSP code
-        	  var customer_id = <%=customer_id%>;
-        	  var total_price = <%=Math.round(total_price + total_price * 0.08)%>;
-
-        	  // Construct the URL using JavaScript string concatenation
-        	  var url = '<%=request.getContextPath()%>/addOrder?cust_id=' + customer_id + '&total_price=' + total_price;
-
-        	  // Redirect to the constructed URL
-        	  window.location.href = url;         });
-       }
-     }).render('#paypal-button-container');
-   </script>
 	<%
 	} catch (NullPointerException e) {
-		response.sendRedirect(request.getContextPath() + "/loadCheckout");
+	response.sendRedirect(request.getContextPath() + "/loadCheckout");
 	} catch (Exception e) {
 	response.sendRedirect(request.getContextPath() + "/loadBooks");
 	}
