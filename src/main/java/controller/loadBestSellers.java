@@ -35,6 +35,7 @@ public class loadBestSellers extends HttpServlet {
 		String filter = request.getParameter("filter");
 		System.out.print("hello??");
 		ArrayList<Book> books;
+		Book topBook = null;
 		BookDAO bookDao = new BookDAO();
 		
 		if (filter == null) {
@@ -53,9 +54,11 @@ public class loadBestSellers extends HttpServlet {
 			x_axis.add(book.getTitle());
 		}
 		
-		Book topBook = bookDao.getBestSellingBook();
-		
-		System.out.print(topBook.getISBN());
+		try {
+			 topBook = bookDao.getBestSellingBook();
+		} catch (NullPointerException e) {
+			topBook = new Book(0,"",0);
+		}
 		
 		request.setAttribute("x_axis", x_axis);
 		request.setAttribute("y_axis", y_axis);

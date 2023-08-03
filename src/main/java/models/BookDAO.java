@@ -817,17 +817,17 @@ public class BookDAO {
 	}
 
 	public Book getBestSellingBook() {
-		
+
 		Book book = null;
-		String query = "SELECT b.*, SUM(ob.quantity) AS total_quantity FROM order_book ob JOIN orders o ON ob.orders_id = o.orders_id JOIN books b ON ob.book_id = b.book_id WHERE DATE_FORMAT(o.order_created, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m') GROUP BY b.book_id, b.title ORDER BY total_quantity DESC LIMIT 1";
+		String query = "SELECT b.*, SUM(ob.quantity) AS total_quantity FROM order_book ob JOIN orders o ON ob.orders_id = o.orders_id JOIN books b ON ob.book_id = b.book_id GROUP BY b.book_id, b.title ORDER BY total_quantity DESC LIMIT 1";
 		Connection conn = Database.connect();
 		System.out.print("enter");
-		
+
 		try {
 			PreparedStatement myStmt = conn.prepareStatement(query);
 			ResultSet rs = myStmt.executeQuery();
 			System.out.print("hello");
-		
+
 			if (rs.next()) {
 				System.out.print(rs.getInt("book_id"));
 				Integer book_id = rs.getInt("book_id");
@@ -849,17 +849,9 @@ public class BookDAO {
 
 				book = new Book(book_id, title, description, ISBN, rating, price, category_id, image, author_id,
 						creation_date, quantity, publisher_id, author_name, publisher_name, category_name);
-			} else {
-				System.out.print("12");
-				book = new Book(0, "Empty", 0);
 			}
-			
-		} catch (NullPointerException e) {
-	
-			book = new Book(0, "", 0);
-			
-		}catch (Exception e) {
-		
+		} catch (Exception e) {
+
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -871,7 +863,7 @@ public class BookDAO {
 			}
 		}
 		return book;
-		
+
 	}
 
 }

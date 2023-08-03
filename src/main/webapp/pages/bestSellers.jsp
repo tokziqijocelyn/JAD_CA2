@@ -23,24 +23,22 @@
 
 	ArrayList<String> x_axis = (ArrayList<String>) request.getAttribute("x_axis");
 	ArrayList<Integer> y_axis = (ArrayList<Integer>) request.getAttribute("y_axis");
-	
 
 	if (x_axis == null || y_axis == null) {
 		response.sendRedirect(request.getContextPath() + "/loadBestSellers");
 		return;
 	}
-	
+
 	Book book = (Book) request.getAttribute("topBook");
-	 
 	%>
 
 	<div class="container my-5">
 		<div class="row mx-2">
-			<h1><%=book.getTitle()%></h1>
+
 			<div class="col-md-4">
 				<h2 class="mb-4">
 					<u><b>Best Selling Books</b></u>
-		
+
 				</h2>
 				<select class="form-select mb-2" id="filter">
 					<option <%=filter.equals("today") ? "selected" : ""%> value="today">Today</option>
@@ -58,10 +56,45 @@
 				</div>
 			</div>
 		</div>
-		
-	
-		
-		<% %>
+
+		<div class="container m-5">
+
+			<h4>Top book of all time:</h4>
+
+			<%
+			if (book == null) {
+			%>
+
+			<div>
+				No Books bought yet
+				<div>
+
+					<%
+					} else if (book.getBook_id() == 0) {
+					%>
+					<div>No Books bought yet</div>
+					<%
+					} else {
+					%>
+
+					<div class="card" style="width: 18rem;">
+						<img class="card-img-top"
+							src="<%=request.getContextPath() + book.getImage()%>"
+							alt="Card image cap">
+						<div class="card-body">
+							<p class="card-text">
+								Title:
+								<%=book.getTitle()%>
+								<br>
+						</div>
+					</div>
+
+					<%
+					}
+					%>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<script>	
