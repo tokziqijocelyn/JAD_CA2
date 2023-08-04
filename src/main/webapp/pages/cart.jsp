@@ -119,11 +119,11 @@
 													<%
 													if (cartItem.getDiscountAmt() == cartItem.getTotalAmt()) {
 													%>
-													$<%=cartItem.getTotalAmt()%>
+													$<%=decimalFormat.format(cartItem.getTotalAmt())%>
 													<%
 													} else {
 													%>
-													<s class="mr-2">$<%=cartItem.getTotalAmt()%></s>$<%=cartItem.getDiscountAmt()%>
+													<s class="mr-2">$<%=decimalFormat.format(cartItem.getTotalAmt())%></s>$<%=decimalFormat.format(cartItem.getDiscountAmt())%>
 													<%
 													}
 													%>
@@ -166,27 +166,26 @@
 										<div class="d-flex flex-column justify-content-between mb-5">
 											<h5 class="text-uppercase">Original Total price:</h5>
 											<h5>
-												<%
-												String formattedAmount = decimalFormat.format(totalPrice);
-												%>
-												$ <span id="totalPrice"><%=formattedAmount%></span>
+												$ <span id="totalPrice"><%=decimalFormat.format(totalPrice)%></span>
 											</h5>
 											<br>
 											<h5 class="text-uppercase">Amount saved:</h5>
 											<h5>
 												<%
-												String formattedAmountSaved = decimalFormat.format(totalPrice - amountSaved);
+												String saved;
+												if (totalPrice == amountSaved) {
+													saved = decimalFormat.format(totalPrice - amountSaved);
+												} else {
+													saved = "0.00";
+												}
 												%>
-												$ <span id="totalPrice"><%=formattedAmountSaved%></span>
+												$ <span id="totalPrice"><%=saved%></span>
 											</h5>
 											<br>
 											<hr>
 											<h5 class="text-uppercase">Amount after discount:</h5>
 											<h5>
-												<%
-												String formattedSavedAmount = decimalFormat.format(amountSaved);
-												%>
-												$ <span id="totalPrice"><%=formattedSavedAmount%></span>
+												$ <span id="totalPrice"><%=decimalFormat.format(amountSaved)%></span>
 											</h5>
 											<br>
 											<hr>
