@@ -29,7 +29,6 @@
 		return;
 	}
 
-	Book book = (Book) request.getAttribute("topBook");
 	%>
 
 	<div class="container my-5">
@@ -57,44 +56,6 @@
 			</div>
 		</div>
 
-		<div class="container m-5">
-
-			<h4>Top book of all time:</h4>
-
-			<%
-			if (book == null) {
-			%>
-
-			<div>
-				No Books bought yet
-				<div>
-
-					<%
-					} else if (book.getBook_id() == 0) {
-					%>
-					<div>No Books bought yet</div>
-					<%
-					} else {
-					%>
-
-					<div class="card" style="width: 18rem;">
-						<img class="card-img-top"
-							src="<%=request.getContextPath() + book.getImage()%>"
-							alt="Card image cap">
-						<div class="card-body">
-							<p class="card-text">
-								Title:
-								<%=book.getTitle()%>
-								<br>
-						</div>
-					</div>
-
-					<%
-					}
-					%>
-				</div>
-			</div>
-		</div>
 	</div>
 
 	<script>	
