@@ -22,9 +22,11 @@
 	<%@page import='java.util.Timer'%>
 	<%@page import='java.util.TimerTask'%>
 	<%@page import='java.util.ArrayList'%>
+	<%@page import='java.text.*'%>
 	<%@include file="../custNav.jsp"%>
 
 	<%	
+	DecimalFormat decfor = new DecimalFormat("0.00");  
 	String categoryId = request.getParameter("category");
 	String publisherId = request.getParameter("publisher");
 	int category_id;
@@ -165,13 +167,13 @@
 									<%
 									if (discount_price == null) {
 									%>
-									<span class="badge bg-secondary">$<%=price%></span>
+									<span class="badge bg-secondary">$<%=decfor.format(price)%></span>
 									<%
 									} else {
 									%>
-									<span class="badge bg-secondary discounted-price">$<%=price%></span>
+									<span class="badge bg-secondary discounted-price">$<%= decfor.format(price)%></span>
 									<br /> <span class="badge bg-success">Discounted Price:
-										$<%=discount_price%></span>
+										$<%=decfor.format(discount_price)%></span>
 									<%
 									}
 									%>

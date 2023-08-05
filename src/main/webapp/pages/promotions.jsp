@@ -5,12 +5,14 @@
 	<%@page import="java.time.LocalDate"%>
 	<%@page import="java.time.DayOfWeek"%>
 	<%@page import="java.util.ArrayList"%>
+	<%@page import="java.text.DecimalFormat"%>
 
 	<%
 	String visible = "visible";
 	String color = "#C7CAFF";
 	String icon = "fa-solid fa-face-smile:";
-
+	DecimalFormat decforr = new DecimalFormat("0.00"); 
+	
 	//handling promotions =========================
 	Promo promo = null;
 	
@@ -176,7 +178,7 @@
 								<s><span class="text-secondary discounted-price">$<%=price%></span>
 								</s>
 								<h5 class="text-warning">
-									$<%=discount_price%></h5>
+									$<%=decforr.format(discount_price)%></h5>
 							</div>
 
 

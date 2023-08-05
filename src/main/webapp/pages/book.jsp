@@ -9,6 +9,7 @@
 <%@page import='models.ReviewDAO'%>
 <%@page import='java.sql.*'%>
 <%@page import='java.util.ArrayList'%>
+<%@page import='java.text.*'%>
 <%@include file="../custNav.jsp"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
@@ -24,6 +25,7 @@
 <body>
 	<div>
 		<%
+		DecimalFormat decfor = new DecimalFormat("0.00");  
 		String code = request.getParameter("code");
 		String message = "";
 		Boolean has = false;
@@ -113,9 +115,9 @@
 								<%
 								} else {
 								%>
-								<span class="badge bg-secondary discounted-price">$<%=price%></span>
+								<span class="badge bg-secondary discounted-price">$<%=decfor.format(price)%></span>
 								<br /> <span class="badge bg-success">Discounted Price:
-									$<%=discount_price%></span>
+									$<%=decfor.format(discount_price)%></span>
 								<%
 								}
 								%>

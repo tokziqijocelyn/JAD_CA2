@@ -169,21 +169,32 @@
 												$ <span id="totalPrice"><%=decimalFormat.format(totalPrice)%></span>
 											</h5>
 											<br>
-											<h5 class="text-uppercase">Amount saved:</h5>
-											<h5>
-												<%
+
+											<%	
 												String saved;
-												if (totalPrice == amountSaved) {
+											String sAmountSaved = (String)Float.toString(totalPrice - amountSaved); 
+											System.out.println(sAmountSaved);
+											
+												if (!sAmountSaved.equals("0.0")) {
 													saved = decimalFormat.format(totalPrice - amountSaved);
 												} else {
-													saved = "0.00";
+													saved = "0.00"; // This assumes you want to display "0.00" for zero savings
 												}
-												%>
+											%>
+
+											<h5 class="text-uppercase">Amount saved:</h5>
+											<h5>
+											
+
 												$ <span id="totalPrice"><%=saved%></span>
 											</h5>
+
+
 											<br>
 											<hr>
-											<h5 class="text-uppercase">Amount after discount:</h5>
+
+
+											<h5 class="text-uppercase">Total Payable Amount:</h5>
 											<h5>
 												$ <span id="totalPrice"><%=decimalFormat.format(amountSaved)%></span>
 											</h5>
